@@ -1,8 +1,8 @@
-package sort;
+﻿package sort;
 
 public interface Sort {
 	public void sort(int[] array);
 }
 
 
-改改改
+改你妹，不给你改
