@@ -39,7 +39,6 @@ public class MultiIterableClass extends IterableClass {
 
 			@Override
 			public Iterator<String> iterator() {
-				// TODO Auto-generated method stub
 				List<String> shuffled = new ArrayList<String>(Arrays.asList(words));
 				Collections.shuffle(shuffled);
 				return shuffled.iterator();
