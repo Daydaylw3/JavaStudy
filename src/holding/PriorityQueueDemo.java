@@ -11,7 +11,6 @@ import java.util.Set;
 public class PriorityQueueDemo {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		PriorityQueue<Integer> priorityQueue = 
 				new PriorityQueue<Integer>();
 		Random rand = new Random(47);
@@ -21,9 +20,9 @@ public class PriorityQueueDemo {
 		
 		List<Integer> ints = Arrays.asList(25, 22, 20, 18, 14, 9, 3, 1, 1, 2, 3, 9, 14, 18, 21, 23, 25);
 		priorityQueue = new PriorityQueue<Integer>(ints);
-		//×Ô¶¯ÅÅÐò
+		//ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		QueueDemo.printQ(priorityQueue);
-		//ÅÅÐò²ßÂÔÉèÖÃÎªµ¹Ðò
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
 		priorityQueue = new PriorityQueue<Integer>(ints.size(), Collections.reverseOrder());
 		priorityQueue.addAll(ints);
 		QueueDemo.printQ(priorityQueue);
@@ -31,9 +30,9 @@ public class PriorityQueueDemo {
 		String fact = "Education should eschew obfuscation";
 		List<String> strings = Arrays.asList(fact.split(" "));
 		PriorityQueue<String> stringPQ = new PriorityQueue<String>(strings);
-		//×Ô¶¯ÅÅÐò
+		//ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
 		QueueDemo.printQ(stringPQ);
-		//ÅÅÐò²ßÂÔÉèÖÃÎªµ¹Ðò
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
 		stringPQ = new PriorityQueue<String>(strings.size(), Collections.reverseOrder());
 		stringPQ.addAll(strings);
 		QueueDemo.printQ(stringPQ);
@@ -42,8 +41,8 @@ public class PriorityQueueDemo {
 		for(char c : fact.toCharArray())
 			charSet.add(c);
 		PriorityQueue<Character> characterPQ = new PriorityQueue<Character>(charSet);
-		//×Ô¶¯ÅÅÐò
-		//setÖ»ÔÊÐíÒ»¸öÔªËØ³öÏÖÒ»´Î
+		//ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
+		//setÖ»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø³ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 		QueueDemo.printQ(characterPQ);
 	}
 
