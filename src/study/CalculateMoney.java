@@ -18,15 +18,16 @@ public class CalculateMoney {
 	public static final int Y = 375;
 	public static final int Z = 163;
 	
-	public static void main(String[] args) {
+	
+	public static void count(int target) {
 		int u = 0, x = 0, y = 0, z = 14;
 		ArrayList<Calcu> c = new ArrayList<Calcu>();
 		CalculateMoney calcu = new CalculateMoney();
-		for(; U * u + X * x + Y * y + Z * z < (Z + 2400); u++) {
-			for (; U * u + X * x + Y * y + Z * z <  (Z + 2400); x++) {
-				for(; U * u + X * x + Y * y + Z * z <  (Z + 2400); y ++) {
-					for(; U * u + X * x + Y * y + Z * z <  (Z + 2400); z ++) {
-						if((U * u + X * x + Y * y + Z * z <  (Z + 2400)) && (U * u + X * x + Y * y + Z * z >= 2400)) {
+		for(; U * u + X * x + Y * y + Z * z < (Z + target); u++) {
+			for (; U * u + X * x + Y * y + Z * z <  (Z + target); x++) {
+				for(; U * u + X * x + Y * y + Z * z <  (Z + target); y ++) {
+					for(; U * u + X * x + Y * y + Z * z <  (Z + target); z ++) {
+						if((U * u + X * x + Y * y + Z * z <  (Z + target)) && (U * u + X * x + Y * y + Z * z >= target)) {
 							Calcu ca = calcu.new Calcu(u, x, y, z, (U * u + X * x + Y * y + 163 * z),  (258 * u + 128 * x + 68 * y + 30 * z));
 							c.add(ca);
 						}
@@ -49,6 +50,10 @@ public class CalculateMoney {
 					(c1.getZ() > 0 ? (", 30元礼包 = " + c1.getZ()) : "") + 
 					", gold = " + c1.getGold());
 		}
+	}
+	
+	public static void main(String[] args) {
+		count(2400);
 	}
 	
 	public void sort(ArrayList<Calcu> array) {
