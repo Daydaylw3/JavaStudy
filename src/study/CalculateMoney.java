@@ -13,47 +13,72 @@ import java.util.ArrayList;
  * 暂时只实现了穷举法
  * */
 public class CalculateMoney {
-	public static final int U = 1875;
-	public static final int X = 813;
-	public static final int Y = 375;
-	public static final int Z = 163;
+	
+	public static final int ACost = 648;
+	public static final int BCost = 258;
+	public static final int CCost = 128;
+	public static final int DCost = 68;
+	public static final int ECost = 30;
+	public static final int FCost = 12;
+	
+	public static final int AGet = 5000;
+	public static final int BGet = 1875;
+	public static final int CGet = 812;
+	public static final int DGet = 375;
+	public static final int EGet = 162;
+	public static final int FGet = 62;
+	
 	
 	
 	public static void count(int target) {
-		int u = 0, x = 0, y = 0, z = 14;
-		ArrayList<Calcu> c = new ArrayList<Calcu>();
+		int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
+		ArrayList<Calcu> cl = new ArrayList<Calcu>();
 		CalculateMoney calcu = new CalculateMoney();
-		for(; U * u + X * x + Y * y + Z * z < (Z + target); u++) {
-			for (; U * u + X * x + Y * y + Z * z <  (Z + target); x++) {
-				for(; U * u + X * x + Y * y + Z * z <  (Z + target); y ++) {
-					for(; U * u + X * x + Y * y + Z * z <  (Z + target); z ++) {
-						if((U * u + X * x + Y * y + Z * z <  (Z + target)) && (U * u + X * x + Y * y + Z * z >= target)) {
-							Calcu ca = calcu.new Calcu(u, x, y, z, (U * u + X * x + Y * y + 163 * z),  (258 * u + 128 * x + 68 * y + 30 * z));
-							c.add(ca);
+		for (; AGet * a + BGet * b + CGet * c + DGet * d + EGet * e  + FGet * f < (FGet + target); a++) {
+			int tempA = AGet * a;
+			for(; tempA + BGet * b + CGet * c + DGet * d + EGet * e  + FGet * f < (FGet + target); b++) {
+				int tempB = tempA + BGet * b;
+				for(; tempB + CGet * c + DGet * d + EGet * e  + FGet * f < (FGet + target); c++) {
+					int tempC = tempB + CGet * c;
+					for(; tempC + DGet * d + EGet * e  + FGet * f < (FGet + target); d++) {
+						int tempD = tempC + DGet * d;
+						for(; tempD + EGet * e  + FGet * f < (FGet + target); e++) {
+							int tempE = tempD + EGet * e;
+							for(; tempE + FGet * f < (FGet + target); f++) {
+								if(tempE + FGet * f >= target) {
+									//符合要求
+									Calcu ca = calcu.new Calcu(a, b, c, d, e, f, tempE + FGet * f, 
+											ACost * a + BCost * b + CCost * c + DCost * d + ECost * e  + FCost * f);
+									cl.add(ca);
+								}
+							}
+							f = 0;
 						}
+						e = 0;
 					}
-					z = 0;
+					d = 0;
 				}
-				y = 0;
-				z = 0;
+				c = 0;
 			}
-			x = 0;
-			y = 0;
-			z = 0;
+			b = 0;
 		}
-		calcu.sort(c);
-		for(Calcu c1 : c) {
-			System.out.println("rmb = " + c1.getRmb() + 
-					(c1.getU() > 0 ? (", 258元礼包 = " + c1.getU()) : "") + 
-					(c1.getX() > 0 ? (", 128元礼包 = " + c1.getX()) : "") + 
-					(c1.getY() > 0 ? (", 68元礼包 = " + c1.getY()) : "") + 
-					(c1.getZ() > 0 ? (", 30元礼包 = " + c1.getZ()) : "") + 
+		
+		calcu.sort(cl);
+		for(Calcu c1 : cl) {
+			System.out.println("花费:" + c1.getRmb() + "元" + 
+					", 购买礼包数:" + c1.getAll() + 
+					(c1.getA() > 0 ? (", 648元礼包=" + c1.getA()) : "") + 
+					(c1.getB() > 0 ? (", 258元礼包=" + c1.getB()) : "") + 
+					(c1.getC() > 0 ? (", 128元礼包=" + c1.getC()) : "") + 
+					(c1.getD() > 0 ? (", 68元礼包=" + c1.getD()) : "") + 
+					(c1.getE() > 0 ? (", 30元礼包=" + c1.getE()) : "") + 
+					(c1.getF() > 0 ? (", 12元礼包=" + c1.getF()) : "") +
 					", gold = " + c1.getGold());
 		}
 	}
 	
 	public static void main(String[] args) {
-		count(2400);
+		count(998);
 	}
 	
 	public void sort(ArrayList<Calcu> array) {
@@ -61,7 +86,9 @@ public class CalculateMoney {
 			return ;
 		for(int i = 0; i < array.size(); i ++) {
 			for(int j = 0; j < array.size() - i - 1; j ++) {
-				if (array.get(j).getRmb() > array.get(j + 1).getRmb()) {
+				double count1 = 1.5 * array.get(j).getRmb() + 23.5 * array.get(j).getAll();
+				double count2 = 1.5 * array.get(j + 1).getRmb() + 23.5 * array.get(j + 1).getA();
+				if (count1 > count2) {
 					Calcu temp1 = array.get(j);
 					Calcu temp2 = array.get(j + 1);
 					array.set(j, temp2);
@@ -72,52 +99,72 @@ public class CalculateMoney {
 	}
 	
 	public class Calcu{
-		private int u;
-		private int x;
-		private int y;
-		private int z;
+		private int a;
+		private int b;
+		private int c;
+		private int d;
+		private int e;
+		private int f;
 		private int gold;
 		private int rmb;
-		Calcu(int u, int x, int y, int z, int gold, int rmb){
-			this.u = u;
-			this.x = x;
-			this.y = y;
-			this.z = z;
+		
+		Calcu(int a, int b, int c, int d, int e, int f, int gold, int rmb){
+			this.a = a;
+			this.b = b;
+			this.c = c;
+			this.d = d;
+			this.e = e;
+			this.f = f;
 			this.gold = gold;
 			this.rmb = rmb;
 		}
-		public int getU() {
-			return u;
+		public int getAll() {
+			return a + b + c + d + e + f;
 		}
-		public int getX() {
-			return x;
+		public int getA() {
+			return a;
 		}
-		public int getY() {
-			return y;
+		public void setA(int a) {
+			this.a = a;
 		}
-		public int getZ() {
-			return z;
+		public int getB() {
+			return b;
+		}
+		public void setB(int b) {
+			this.b = b;
+		}
+		public int getC() {
+			return c;
+		}
+		public void setC(int c) {
+			this.c = c;
+		}
+		public int getD() {
+			return d;
+		}
+		public void setD(int d) {
+			this.d = d;
+		}
+		public int getE() {
+			return e;
+		}
+		public void setE(int e) {
+			this.e = e;
+		}
+		public int getF() {
+			return f;
+		}
+		public void setF(int f) {
+			this.f = f;
 		}
 		public int getGold() {
 			return gold;
 		}
-		public int getRmb() {
-			return rmb;
-		}
-		public void setU(int u) {
-			this.u = u;
-		}
-		public void setX(int x) {
-			this.x = x;
-		}
-		public void setY(int y) {
-			this.y = y;
-		}
-		public void setZ(int z) {
-			this.z = z;
-		}
 		public void setGold(int gold) {
 			this.gold = gold;
+		}
+		public int getRmb() {
+			return rmb;
 		}
 		public void setRmb(int rmb) {
 			this.rmb = rmb;
