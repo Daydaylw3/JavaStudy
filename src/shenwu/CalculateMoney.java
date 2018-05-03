@@ -105,13 +105,7 @@ public class CalculateMoney {
 		bag.add(new GiftBag("普通68", 68, 300));
 		bag.add(new GiftBag("普通30", 30, 130));
 		bag.add(new GiftBag("普通12", 12, 50));
-		int lim = limitTimes;
-		int up;
-//		int remain = remain(bag, target);
-		while(lim > 0 && remain(bag, target) > 0) {
-			
-			lim --;
-		}
+		
 	}
 	private static int remain(ArrayList<GiftBag> bag, int target) {
 		int remain = target;
