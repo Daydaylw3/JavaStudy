@@ -14,6 +14,7 @@ import java.util.ArrayList;
  * 
  * 20180502 by tanlt
  * 期待实现限时数量
+ * 尝试通过贪心算法实现
  * */
 public class CalculateMoney {
 	
@@ -44,7 +45,7 @@ public class CalculateMoney {
 	 * */
 	public static void count(int target) {
 		int a = 0, b = 0, c = 0, d = 0, e = 0, f = 0;
-		ArrayList<GiftBag> cl = new ArrayList<GiftBag>();
+		ArrayList<GiftBag1> cl = new ArrayList<GiftBag1>();
 		CalculateMoney calcu = new CalculateMoney();
 		for (; AGet * a + BGet * b + CGet * c + DGet * d + EGet * e  + FGet * f < (FGet + target); a++) {
 			int tempA = AGet * a;
@@ -59,7 +60,7 @@ public class CalculateMoney {
 							for(; tempE + FGet * f < (FGet + target); f++) {
 								if(tempE + FGet * f >= target) {
 									//符合要求
-									GiftBag ca = calcu.new GiftBag(a, b, c, d, e, f, tempE + FGet * f, 
+									GiftBag1 ca = calcu.new GiftBag1(a, b, c, d, e, f, tempE + FGet * f, 
 											ACost * a + BCost * b + CCost * c + DCost * d + ECost * e  + FCost * f);
 									cl.add(ca);
 								}
@@ -76,7 +77,7 @@ public class CalculateMoney {
 		}
 		
 		calcu.sort(cl);
-		for(GiftBag c1 : cl) {
+		for(GiftBag1 c1 : cl) {
 			if(c1.getAll() < 7)
 				System.out.println("花费:" + c1.getRmb() + "元" + 
 						", 购买礼包数:" + c1.getAll() + 
@@ -91,6 +92,11 @@ public class CalculateMoney {
 	}
 	
 	public static void count(int target, int limitTimes) {
+		GiftBag g648 = new GiftBag(648, 4000, 5000);
+		GiftBag g258 = new GiftBag(258, 1500, 1875);
+		GiftBag g128 = new GiftBag(128, 650, 162);
+		GiftBag g68 = new GiftBag(68, 300, 375);
+		GiftBag g30 = new GiftBag(30, 4000, 162);
 		
 	}
 	
@@ -98,7 +104,7 @@ public class CalculateMoney {
 		count(4000);
 	}
 	
-	public void sort(ArrayList<GiftBag> array) {
+	public void sort(ArrayList<GiftBag1> array) {
 		if(array.size() == 0)
 			return ;
 		for(int i = 0; i < array.size(); i ++) {
@@ -107,8 +113,8 @@ public class CalculateMoney {
 				double count1 = 1.5 * array.get(j).getRmb() + 23.5 * array.get(j).getAll();
 				double count2 = 1.5 * array.get(j + 1).getRmb() + 23.5 * array.get(j + 1).getA();
 				if (count1 > count2) {
-					GiftBag temp1 = array.get(j);
-					GiftBag temp2 = array.get(j + 1);
+					GiftBag1 temp1 = array.get(j);
+					GiftBag1 temp2 = array.get(j + 1);
 					array.set(j, temp2);
 					array.set(j + 1, temp1);
 				}
@@ -116,12 +122,12 @@ public class CalculateMoney {
 		}
 	}
 	
-	public class GiftBag{
+	public class GiftBag1{
 		private int a, b, c, d, e, f;
 		private int gold;
 		private int rmb;
 		
-		GiftBag(int a, int b, int c, int d, int e, int f, int gold, int rmb){
+		GiftBag1(int a, int b, int c, int d, int e, int f, int gold, int rmb){
 			this.a = a; this.b = b; this.c = c; this.d = d; this.e = e; this.f = f;
 			this.gold = gold;
 			this.rmb = rmb;
