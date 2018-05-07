@@ -92,12 +92,37 @@ public class CalculateMoney {
 	}
 	
 	public static void count(int target, int limitTimes) {
-		GiftBag g648 = new GiftBag(648, 4000, 5000);
-		GiftBag g258 = new GiftBag(258, 1500, 1875);
-		GiftBag g128 = new GiftBag(128, 650, 162);
-		GiftBag g68 = new GiftBag(68, 300, 375);
-		GiftBag g30 = new GiftBag(30, 4000, 162);
+		ArrayList<GiftBag> bag = new ArrayList<GiftBag>();
+		bag.add(new GiftBag("限时648", 648, 5000));
+		bag.add(new GiftBag("限时258", 258, 1875));
+		bag.add(new GiftBag("限时128", 128, 812));
+		bag.add(new GiftBag("限时68", 68, 375));
+		bag.add(new GiftBag("限时30", 30, 162));
+		bag.add(new GiftBag("限时12", 12, 62));
+		bag.add(new GiftBag("普通648", 648, 4000));
+		bag.add(new GiftBag("普通258", 258, 1500));
+		bag.add(new GiftBag("普通128", 128, 650));
+		bag.add(new GiftBag("普通68", 68, 300));
+		bag.add(new GiftBag("普通30", 30, 130));
+		bag.add(new GiftBag("普通12", 12, 50));
 		
+	}
+	private static int remain(ArrayList<GiftBag> bag, int target) {
+		int remain = target;
+		for(GiftBag b : bag)
+			remain -= (b.getGold() * b.getNumber());
+		return remain;
+	}
+	private static int getMin(int n1, int n2) {
+		return n1 >= n2 ? n2 : n1;
+	}
+	private static int getMin(int n1, int n2, int... n) {
+		int min = getMin(n1, n2);
+		for(int i : n) {
+			if(i < min)
+				min = i;
+		}
+		return min;
 	}
 	
 	public static void main(String[] args) {
