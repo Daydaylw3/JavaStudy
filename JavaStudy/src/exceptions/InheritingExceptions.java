@@ -1,4 +1,4 @@
-package exception;
+package exceptions;
 
 class SimpleException extends Exception {
 	
