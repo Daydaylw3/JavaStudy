@@ -1,5 +1,11 @@
 package exceptions;
 
+
+/*
+ * 异常链
+ * 在捕获一个异常后抛出另一个异常， 并且希望
+ * 把原始异常信息保存下来，这被称为异常链
+ * */
 class DynamicFieldsException extends Exception {}
 
 public class DynamicFields {
@@ -49,6 +55,43 @@ public class DynamicFields {
 	public Object getField(String id) throws NoSuchFieldException {
 		return fields[getFieldNumber(id)][1];
 	}
-	
+	public Object setField(String id, Object value) throws DynamicFieldsException {
+		if (value == null) {
+			DynamicFieldsException dfe = 
+					new DynamicFieldsException();
+			dfe.initCause(new NullPointerException());
+			throw dfe;
+		}
+		int fieldNumber = hasField(id);
+		if(fieldNumber == -1)
+			fieldNumber = makeField(id);
+		Object result = null;
+		try {
+			result = getField(id);	//get old value
+		}catch(NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		}
+		fields[fieldNumber][1] = value;
+		return result;
+	}
+	public static void main(String[] ars) {
+		DynamicFields df = new DynamicFields(3);
+		System.out.println(df);
+		try {
+			df.setField("d", "a value for d");
+			df.setField("number", 47);
+			df.setField("number2", 48);
+			System.out.println(df);
+			df.setField("d", "a new value for d");
+			df.setField("number3", 11);
+			System.out.println("df: " + df);
+			System.out.println("df.getField(\"d\") : " + df.getField("d"));
+			Object field = df.setField("d", null);		//Exception
+		}catch(NoSuchFieldException e) {
+			e.printStackTrace(System.out);
+		}catch(DynamicFieldsException e) {
+			e.printStackTrace(System.out);
+		}
+	}
 	
 }
