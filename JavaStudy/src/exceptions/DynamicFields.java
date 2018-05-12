@@ -59,6 +59,7 @@ public class DynamicFields {
 		if (value == null) {
 			DynamicFieldsException dfe = 
 					new DynamicFieldsException();
+			//通过initCause()方法把NullPointerException对象插入
 			dfe.initCause(new NullPointerException());
 			throw dfe;
 		}
@@ -87,9 +88,15 @@ public class DynamicFields {
 			System.out.println("df: " + df);
 			System.out.println("df.getField(\"d\") : " + df.getField("d"));
 			Object field = df.setField("d", null);		//Exception
+			
 		}catch(NoSuchFieldException e) {
 			e.printStackTrace(System.out);
 		}catch(DynamicFieldsException e) {
+			e.printStackTrace(System.out);
+		}
+		try {
+			df.getField("c");
+		}catch(NoSuchFieldException e) {
 			e.printStackTrace(System.out);
 		}
 	}
