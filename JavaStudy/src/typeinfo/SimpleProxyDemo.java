@@ -15,14 +15,28 @@ class RealObject implements Interface {
 }
 
 class SimpleProxy implements Interface {
-	
+	private Interface proxied;
+	public SimpleProxy(Interface proxied) {
+		this.proxied = proxied;
+	}
+	public void doSomething() {
+		System.out.println("SimpleProxy doSomething");
+		proxied.doSomething();
+	}
+	public void somethingElse(String arg) {
+		System.out.println("SimpleProxy somethingElse");
+		proxied.somethingElse(arg);
+	}
 }
 
 class SimpleProxyDemo {
-
+	public static void consumer(Interface iface) {
+		iface.doSomething();
+		iface.somethingElse("banana");
+	}
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		consumer(new RealObject());
+		consumer(new SimpleProxy(new RealObject()));
 	}
 
 }
