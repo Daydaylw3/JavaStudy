@@ -1,5 +1,11 @@
 package generics;
 
+
+/**
+ * 有时候可以绕过擦除丢失类型信息的问题，但是有时必须
+ * 通过引入类型标签来对擦除进行补偿，这意味着需要显式
+ * 的传递类型的Class的对象，以便可以再类型表达式中使用
+ * */
 class Building {}
 class House extends Building {}
 
