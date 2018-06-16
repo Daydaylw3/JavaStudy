@@ -1,10 +1,16 @@
 package generics;
 
+/**
+ * 创建类型实例
+ * 
+ * Sun建议使用显式的工厂，并将限制其类型
+ * */
 interface FactoryI<T> {
 	T create();
 }
 class Foo2<T> {
 	private T x;
+	//还有这种写法，长见识了
 	public <F extends FactoryI<T>> Foo2(F factory){
 		x = factory.create();
 	}
