@@ -1,5 +1,8 @@
 package tuanzhang.myhashmap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyHashMap<K, V> implements MyMap<K, V> {
 	//数组默认初始化长度
 	private static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;	//16
@@ -54,7 +57,6 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 		public V getValue() {
 			return value;
 		}
-		
 	}
 	
 	@Override
@@ -65,12 +67,35 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 		if(entryUseSize >= defaultInitSize * defaultLoadFactor) {
 			resize(2 * defaultInitSize);
 		}
-		return null;
+		//得到hash值，计算出数组中的位置
+		int index = hash(k) & (defaultInitSize - 1);
+		if(table[index] == null) {
+			table[index] = new Entry<K, V>(k, v, null);
+			++entryUseSize;
+		}else {	//需要遍历单链表
+			Entry<K, V> entry = table[index];
+			Entry<K, V> e = entry;
+			while(e != null) {
+				if(k == e.getKey() || k.equals(e.getKey())) {
+					oldValue= e.value;
+					e.value = v;
+					return oldValue;
+				}
+				e = e.next;
+			}
+			table[index] = new Entry<K, V>(k, v, entry);
+			++entryUseSize;
+		}
+		return oldValue;
 	}
 
 	@Override
 	public V get(K k) {
 		return null;
+	}
+	
+	private int hash(K k) {
+		return 0;
 	}
 	
 	private void resize(int i) {
@@ -83,6 +108,23 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 	
 	private void rehash(Entry<K, V>[] newTable) {
 		//得到原来老的Entry集合  注意遍历单链表
+		List<Entry<K, V>> entryList = new ArrayList<Entry<K, V>>();
+		for(Entry<K, V> entry : table) {
+			if(entry != null) {
+				do {
+					entryList.add(entry);
+					entry = entry.next;
+				}while(entry != null);
+			}
+		}
+		//覆盖旧的引用
+		if(newTable.length > 0) {
+			table = newTable;
+		}
+		//所谓重新hash，就是重新put entry到hashmap
+		for(Entry<K, V> entry : entryList) {
+			put(entry.getKey(), entry.getValue());
+		}
 	}
 
 }
