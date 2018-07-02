@@ -62,4 +62,13 @@ public class ComprehensiveExample {
  * 由于Bar重载了Foo中的getValue方法，所以根据Java的多态特性
  * 可以知道， 其调用的getValue方法是被Bar重载的那个getValue
  * 方法
+ * 所以new Bar()合并起来，做了如下操作
+ * i = 1;
+ * i = 2;
+ * System.out.println(i);
+ * int x = j;
+ * System.out.println(x);
+ * j = 1;
+ * j = 3;
+ * j = 2;
  * */
