@@ -12,9 +12,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 	private int defaultInitSize;
 	private float defaultLoadFactor;
 	
-	//Map中Entry的数量
+	//Map中Entry的数量 aka 衡量是否要重新散列的因素
 	private int entryUseSize;
-	//数组
+	//数组 aka 桶
 	private Entry<K, V>[] table = null;
 	
 	/* ---------- 构造方法 ------------ */
@@ -59,6 +59,10 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 		}
 	}
 	
+	/**
+	 * 将<K, V>放进数组中
+	 * 若原来对应的K已存在，则更新对应的V，并返回原V
+	 * */
 	@Override
 	public V put(K k, V v) {
 		V oldValue = null;
@@ -76,6 +80,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 			Entry<K, V> entry = table[index];
 			Entry<K, V> e = entry;
 			while(e != null) {
+				//比较key是否相同，若相同则更新
 				if(k == e.getKey() || k.equals(e.getKey())) {
 					oldValue= e.value;
 					e.value = v;
@@ -89,13 +94,32 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 		return oldValue;
 	}
 
+	/**
+	 * 根据给定的K值返回相应的V
+	 * */
 	@Override
 	public V get(K k) {
+		int index = hash(k) & (defaultInitSize - 1);
+		
+		if(table[index] == null) {
+			return null;
+		} else {
+			Entry<K, V> entry = table[index];
+			do {
+				if(k == entry.getKey() || k.equals(entry.getKey())) {
+					return entry.value;
+				}
+				entry = entry.next;
+			}while(entry != null);
+		}
 		return null;
 	}
 	
-	private int hash(K k) {
-		return 0;
+	//想要散列均匀，就要进行二进制的位运算
+	final int hash(K k) {
+		int hashCode = k.hashCode();
+		hashCode ^= (hashCode >>> 20) ^ (hashCode >>> 12);
+		return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
 	}
 	
 	private void resize(int i) {
@@ -126,5 +150,4 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 			put(entry.getKey(), entry.getValue());
 		}
 	}
-
 }

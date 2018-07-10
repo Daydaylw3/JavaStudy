@@ -1,5 +1,7 @@
 package fortest;
 
+import java.util.HashMap;
+import java.util.Map;
 
 /* 
  * 多态
@@ -20,6 +22,7 @@ public class DuoTai {
 		}
 		void g() {
 			f();
+			Map map = new HashMap();
 		}
 	}
 	class B extends A {
