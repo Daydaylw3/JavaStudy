@@ -31,7 +31,7 @@ public class Eggs {
 			for(int m = 1; m <= floorNum; m++) {
 				int k = Integer.MAX_VALUE;
 				for(int x = 1; x <= m; x++) {
-					k = getMinNum(k, getMaxNum(curFloor[m - x] + 1, preFloor[x - 1] + 1));
+					k = getMinNum(k, 1 + getMaxNum(curFloor[m - x], preFloor[x - 1]));
 				}
 				curFloor[m] = k;
 			}
