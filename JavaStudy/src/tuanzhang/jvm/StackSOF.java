@@ -1,4 +1,4 @@
-package fortest;
+package tuanzhang.jvm;
 
 /**
  * eclipse中设置每个线程的栈大小：

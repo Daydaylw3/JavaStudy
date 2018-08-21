@@ -1,4 +1,4 @@
-package fortest;
+package tuanzhang.jvm;
 
 /**
 * eclipse中设置最大堆最小堆：
