@@ -1,4 +1,4 @@
-package fortest;
+package tuanzhang.jvm;
 
 public class StackOOM {
 	private static int threadNum = 0;
