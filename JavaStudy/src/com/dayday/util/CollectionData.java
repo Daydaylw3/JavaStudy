@@ -1,6 +1,8 @@
 package com.dayday.util;
 /*
  * 17.2.1 一种Generator解决方案
+ * 
+ * CollectionData是适配器设计模式的一个实例，它将Generator适配到Collection的构造器上
  * */
 
 import java.util.ArrayList;
