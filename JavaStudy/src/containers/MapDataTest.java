@@ -3,6 +3,7 @@ package containers;
 import java.util.Iterator;
 
 import com.dayday.util.Generator;
+import com.dayday.util.MapData;
 import com.dayday.util.Pair;
 
 
@@ -46,7 +47,10 @@ class Letters implements Generator<Pair<Integer, String>>,
 public class MapDataTest {
 
 	public static void main(String[] args) {
-		
+//		Pair Generator:
+		System.out.println(MapData.map(new Letters(), 11));
+//		an Iterable and a single value
+		System.out.println(MapData.map(new Letters(), "Pop"));
 	}
 
 }
