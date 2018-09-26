@@ -11,7 +11,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import com.dayday.util.Generator;
 
 /*
- * 17.1 队列
+ * 17.7 队列
  * */
 public class QueueBehavior {
 	private static int count = 10;
