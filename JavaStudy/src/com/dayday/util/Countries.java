@@ -18,31 +18,19 @@ public class Countries {
 	};
 	
 	//Use AbstractMap by implementing entrySet()
+	//FlyweightMap必须实现entrySet()方法
 	private static class FlyweightMap
 	extends AbstractMap<String, String>{
-		private static class Entry
-		implements Map.Entry<String, String>{
-			int index;
-			Entry(int index) { this.index = index; }
-			public boolean equals(Object o) {
-				return DATA[index][0].equals(o);
-			}
-			public String getKey() {
-				return DATA[index][0];
-			}
-			public String getValue() {
-				return DATA[index][1];
-			}
-			public String setValue(String value) {
-				throw new UnsupportedOperationException();
-			}
-			public int hashCode() {
-				return DATA[index][0].hashCode();
-			}
+		
+		@Override
+		public Set<Map.Entry<String, String>> entrySet() {
+			return entries;
 		}
+		private static Set<Map.Entry<String, String>> entries =
+				new EntrySet(DATA.length);
+		
 		// Use AbstractSet by implementing size() & iterator()
-		static class EntrySet
-		extends AbstractSet<Map.Entry<String, String>> {
+		static class EntrySet extends AbstractSet<Map.Entry<String, String>> {
 			private int size;
 			EntrySet(int size){
 				if(size < 0)
@@ -77,14 +65,28 @@ public class Countries {
 				return size;
 			}
 		}
-		private static Set<Map.Entry<String, String>> entries =
-				new EntrySet(DATA.length);
-		@Override
-		public Set<Map.Entry<String, String>> entrySet() {
-			return entries;
-		}
 		
+		private static class Entry implements Map.Entry<String, String>{
+			int index;
+			Entry(int index) { this.index = index; }
+			public boolean equals(Object o) {
+				return DATA[index][0].equals(o);
+			}
+			public String getKey() {
+				return DATA[index][0];
+			}
+			public String getValue() {
+				return DATA[index][1];
+			}
+			public String setValue(String value) {
+				throw new UnsupportedOperationException();
+			}
+			public int hashCode() {
+				return DATA[index][0].hashCode();
+			}
+		}
 	}
+	
 	static Map<String, String> map = new FlyweightMap();
 	public static Map<String, String> select(final int size){
 		return new FlyweightMap() {
