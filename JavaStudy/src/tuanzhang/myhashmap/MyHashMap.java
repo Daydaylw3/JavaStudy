@@ -21,6 +21,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 	//门面模式
 	public MyHashMap() { this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR); }
 	
+	@SuppressWarnings("unchecked")
 	public MyHashMap(int defaultInitCapacity, float defaultLoadFactor) {
 		if(defaultInitCapacity < 0) {
 			throw new IllegalArgumentException("Illegal initial capacity: " +
