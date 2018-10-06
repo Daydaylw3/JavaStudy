@@ -1,5 +1,7 @@
 package containers.test;
-
+/*
+ * 17.10.1 性能测试框架
+ * */
 import java.util.List;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
@@ -53,7 +55,6 @@ public class Tester<C> {
 			head.append("-");
 		System.out.println(head);
 		//打印纵列头
-		System.out.println(head);
 		System.out.format(sizeField, "size");
 		for(Test test : tests)
 			System.out.format(stringField(), test.name);
