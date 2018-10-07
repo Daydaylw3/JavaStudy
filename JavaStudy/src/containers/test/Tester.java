@@ -15,12 +15,7 @@ public class Tester<C> {
 	protected C container;
 	private String headline = "";
 	private List<Test<C>> tests;
-	private static String stringField() {
-		return "%" + fieldWidth + "s";
-	}
-	private static String numberField() {
-		return "%" + fieldWidth + "d";
-	}
+	
 	private static int sizeWidth = 5;
 	private static String sizeField = "%" + sizeWidth + "s";
 	private TestParam[] paramList = defaultParams;
@@ -43,6 +38,22 @@ public class Tester<C> {
 	public static <C> void run(C cntnr, List<Test<C>> tests, TestParam[] paramList) {
 		new Tester<C>(cntnr, tests, paramList).timedTest();
 	}
+	public void timedTest() {
+		displayHeadline();
+		for(TestParam param : paramList) {
+			System.out.format(sizeField, param.size);
+			for(Test<C> test : tests) {
+				C kontainer = initialize(param.size);
+				long start = System.nanoTime();
+				
+				int reps = test.test(kontainer, param);
+				long duration = System.nanoTime() - start;
+				long timePerRep = duration / reps;
+				System.out.format(numberField(), timePerRep);
+			}
+			System.out.println();
+		}
+	}
 	private void displayHeadline() {
 		//计算宽度并填充"-"
 		int width = fieldWidth * tests.size() + sizeWidth;
@@ -60,20 +71,10 @@ public class Tester<C> {
 			System.out.format(stringField(), test.name);
 		System.out.println();
 	}
-	public void timedTest() {
-		displayHeadline();
-		for(TestParam param : paramList) {
-			System.out.format(sizeField, param.size);
-			for(Test<C> test : tests) {
-				C kontainer = initialize(param.size);
-				long start = System.nanoTime();
-				
-				int reps = test.test(kontainer, param);
-				long duration = System.nanoTime() - start;
-				long timePerRep = duration / reps;
-				System.out.format(numberField(), timePerRep);
-			}
-			System.out.println();
-		}
+	private static String stringField() {
+		return "%" + fieldWidth + "s";
+	}
+	private static String numberField() {
+		return "%" + fieldWidth + "d";
 	}
 }
