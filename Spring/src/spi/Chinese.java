@@ -1,7 +1,7 @@
 package spi;
 
 public class Chinese implements Person {
-	private Axe axe;
+	private Axe axe = new StoneAxe();
 	public void setAxe(Axe axe) {
 		this.axe = axe;
 	}
