@@ -2,6 +2,8 @@ package com.mybatis.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.mybatis.beans.UserBeans;
 
 public interface UserMapper {
@@ -19,7 +21,7 @@ public interface UserMapper {
 	 * @return
 	 * @throws Exception
 	 * */
-	public int updateUser(UserBeans user, int id) throws Exception;
+	public int updateUser(@Param("user_id")int id, @Param("user")UserBeans user) throws Exception;
 	/**
 	 * 删除用户
 	 * @param id

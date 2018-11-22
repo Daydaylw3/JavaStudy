@@ -8,18 +8,18 @@ import com.mybatis.tools.DBTools;
 
 public class UserService {
 	public static void main(String[] args) {
-//		insertUser();		success
-		updateUser();
-//		deleteUser();		success
-//		selectUserById();	success
-//		selectAllUsers();	success
+//		insertUser();		//success
+		updateUser();		//success
+//		deleteUser();		//success
+//		selectUserById();	//success
+//		selectAllUsers();	//success
 	}
 	
 	//
 	private static void insertUser() {
 		SqlSession session = DBTools.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
-		UserBeans user = new UserBeans("dayday", "male", 10);
+		UserBeans user = new UserBeans(1, "Visan", "female", 18);
 		try {
 			mapper.insertUser(user);
 			System.out.println(user);
@@ -34,9 +34,9 @@ public class UserService {
 	private static void updateUser() {
 		SqlSession session = DBTools.getSession();
 		UserMapper userMapper = session.getMapper(UserMapper.class);
-		UserBeans user = new UserBeans("Faker", "male", 22);
+		UserBeans user = new UserBeans("Faker", "male", 20);
 		try {
-			userMapper.updateUser(user, 1);
+			userMapper.updateUser(1, user);
 			System.out.println(user);
 			session.commit();
 		}catch(Exception e) {
