@@ -16,15 +16,15 @@
 		语句的 selectKey 子元素设置它的值。默认：不设置。 -->
 	<!--#{}中的内容，为占位符，当参数为某个JavaBean时，表示放置该Bean对象的属性值 -->
 	<insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-		insert into person (name,sex,age) values (#{name},#{sex},#{age})
+		insert into person (id, name,sex,age) values (#{id},#{name},#{sex},#{age})
 	</insert>
 
 	<update id="updateUser">
 		update person set
-		name=#{name},
-		sex=#{sex},
-		age=#{age}
-		where id=#{id}
+		name=#{user.name},
+		sex=#{user.sex},
+		age=#{user.age}
+		where id=#{user_id}
 	</update>
 
 	<delete id="deleteUser" parameterType="int">

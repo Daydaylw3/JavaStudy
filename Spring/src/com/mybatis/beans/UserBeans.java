@@ -6,7 +6,7 @@ public class UserBeans implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	//id 自增长
-	private Integer id;
+	private int id;
 	//姓名 不可为空
 	private String name;
 	//性别 默认为男
@@ -19,6 +19,13 @@ public class UserBeans implements Serializable{
 	}
 	public UserBeans(String name, String sex, int age) {
 		super();
+		this.name = name;
+		this.sex = sex;
+		this.age = age;
+	}
+	public UserBeans(int id, String name, String sex, int age) {
+//		UserBeans(name, sex, age);
+		this.id = id;
 		this.name = name;
 		this.sex = sex;
 		this.age = age;
