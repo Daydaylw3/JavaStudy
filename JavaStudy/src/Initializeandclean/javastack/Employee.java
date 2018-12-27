@@ -56,4 +56,9 @@ public class Employee implements Cloneable, Serializable {
 		}
 		return obj;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + ", name = " + name;
+	}
 }

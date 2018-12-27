@@ -1,6 +1,7 @@
 package com.mybatis.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -42,4 +43,14 @@ public interface UserMapper {
 	 * @throws Excepiton
 	 * */
 	public List<UserBeans> selectAllUsers() throws Exception;
+	/**
+	 * 查询所有用户的用户名
+	 * @return List<String>
+	 * @throws Exception
+	 * */
+	public List<String> selectAllUserName() throws Exception;
+	/**
+	 * 查询所有用户用户名以及年龄
+	 * */
+	public List<Map<String, String>> selectAllUserIdAndAge() throws Exception;
 }

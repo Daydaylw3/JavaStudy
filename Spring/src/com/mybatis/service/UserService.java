@@ -9,22 +9,24 @@ import com.mybatis.tools.DBTools;
 public class UserService {
 	public static void main(String[] args) {
 //		insertUser();		//success
-		updateUser();		//success
+//		updateUser();		//success
 //		deleteUser();		//success
 //		selectUserById();	//success
 //		selectAllUsers();	//success
+//		selectAllUserName();
+		selectAllUserIdAndAge();
 	}
 	
 	//
 	private static void insertUser() {
 		SqlSession session = DBTools.getSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
-		UserBeans user = new UserBeans(1, "Visan", "female", 18);
+		UserBeans user = new UserBeans("Visan", "female", 18);
 		try {
 			mapper.insertUser(user);
 			System.out.println(user);
 			session.commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			session.rollback();
 		}
@@ -39,7 +41,7 @@ public class UserService {
 			userMapper.updateUser(1, user);
 			System.out.println(user);
 			session.commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			session.rollback();
 		}
@@ -52,7 +54,7 @@ public class UserService {
 		try {
 			userMapper.deleteUser(2);
 			session.commit();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			session.rollback();
 		}
@@ -64,7 +66,7 @@ public class UserService {
 		UserMapper userMapper = session.getMapper(UserMapper.class);
 		try {
 			System.out.println(userMapper.selectUserById(3));
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -75,7 +77,27 @@ public class UserService {
 		UserMapper userMapper = session.getMapper(UserMapper.class);
 		try {
 			System.out.println(userMapper.selectAllUsers());
-		}catch(Exception e) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void selectAllUserName() {
+		SqlSession session = DBTools.getSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		try {
+			System.out.println(userMapper.selectAllUserName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void selectAllUserIdAndAge() {
+		SqlSession session = DBTools.getSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		try {
+			System.out.println(userMapper.selectAllUserIdAndAge());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
