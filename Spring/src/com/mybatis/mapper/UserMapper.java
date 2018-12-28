@@ -51,6 +51,8 @@ public interface UserMapper {
 	public List<String> selectAllUserName() throws Exception;
 	/**
 	 * 查询所有用户用户名以及年龄
+	 * @return List<UserBeans>
+	 * @throws Exception
 	 * */
-	public List<Map<String, String>> selectAllUserIdAndAge() throws Exception;
+	public List<UserBeans> selectAllUserNameAndAge() throws Exception;
 }

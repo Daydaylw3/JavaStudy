@@ -1,5 +1,7 @@
 package com.mybatis.service;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.session.SqlSession;
 
 import com.mybatis.beans.UserBeans;
@@ -8,13 +10,13 @@ import com.mybatis.tools.DBTools;
 
 public class UserService {
 	public static void main(String[] args) {
-//		insertUser();		//success
-//		updateUser();		//success
-//		deleteUser();		//success
-//		selectUserById();	//success
-//		selectAllUsers();	//success
-//		selectAllUserName();
-		selectAllUserIdAndAge();
+//		insertUser();			//success
+//		updateUser();			//success
+//		deleteUser();			//success
+//		selectUserById();		//success
+//		selectAllUsers();		//success
+//		selectAllUserName();		//success
+		selectAllUserNameAndAge();
 	}
 	
 	//
@@ -92,11 +94,16 @@ public class UserService {
 		}
 	}
 	
-	private static void selectAllUserIdAndAge() {
+	private static void selectAllUserNameAndAge() {
 		SqlSession session = DBTools.getSession();
 		UserMapper userMapper = session.getMapper(UserMapper.class);
 		try {
-			System.out.println(userMapper.selectAllUserIdAndAge());
+			// 看上去底层mybatis会返回一个ArrayList
+//			LinkedList<UserBeans> result = (LinkedList<UserBeans>) userMapper.selectAllUserNameAndAge();
+			ArrayList<UserBeans> result = (ArrayList<UserBeans>) userMapper.selectAllUserNameAndAge();
+			for (UserBeans user : result) {
+				System.out.println(user);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

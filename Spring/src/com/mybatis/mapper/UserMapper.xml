@@ -8,10 +8,11 @@
 		<result property="sex" column="sex" javaType="java.lang.String"></result>
 		<result property="age" column="age" javaType="java.lang.Integer"></result>
 	</resultMap>
-	<resultMap id="userIdAndAgeMap" type="java.util.HashMap">
-		<result property="key" column="id" javaType="java.lang.Integer"></result>
-		<result property="value" column="age" javaType="java.lang.String"></result>
+	<resultMap id="userNameAndAgeMap" type="com.mybatis.beans.UserBeans">
+		<result property="name" column="name" javaType="java.lang.String"></result>
+		<result property="age" column="age" javaType="java.lang.Integer"></result>
 	</resultMap>
+	
 
 	<!-- 在各种标签中的id属性必须和接口中的方法名相同 ， id属性值必须是唯一的，不能够重复使用。parameterType属性指明查询时使用的参数类型，resultType属性指明查询返回的结果集类型 -->
 	<!-- useGeneratedKeys：（ 仅 对 insert 有 用 ） 这 会 告 诉 MyBatis 使 用 JDBC 的getGeneratedKeys 
@@ -44,10 +45,10 @@
 	</select>
 	
 	<select id="selectAllUserName" resultType="java.lang.String">
-		select name from person
+		select name from person order by name desc
 	</select>
-
-	<select id="selectAllUserIdAndAge" resultType="userIdAndAgeMap">
-		select id, age from person
+	
+	<select id="selectAllUserNameAndAge" resultMap="userNameAndAgeMap">
+		select name, age from person
 	</select>
 </mapper>
