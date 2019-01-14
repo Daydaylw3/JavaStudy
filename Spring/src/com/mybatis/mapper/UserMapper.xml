@@ -51,4 +51,10 @@
 	<select id="selectAllUserNameAndAge" resultMap="userNameAndAgeMap">
 		select name, age from person
 	</select>
+	
+	<select id="selectUsersWithFuzzyName" resultMap="userMap" >
+		select * from person
+		where
+		name like '%${_parameter}%'
+	</select>
 </mapper>

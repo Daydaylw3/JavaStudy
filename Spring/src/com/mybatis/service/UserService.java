@@ -1,6 +1,7 @@
 package com.mybatis.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -16,7 +17,8 @@ public class UserService {
 //		selectUserById();		//success
 //		selectAllUsers();		//success
 //		selectAllUserName();		//success
-		selectAllUserNameAndAge();
+//		selectAllUserNameAndAge();
+		selectUsersWithFuzzyName();
 	}
 	
 	//
@@ -101,6 +103,19 @@ public class UserService {
 			// 看上去底层mybatis会返回一个ArrayList
 //			LinkedList<UserBeans> result = (LinkedList<UserBeans>) userMapper.selectAllUserNameAndAge();
 			ArrayList<UserBeans> result = (ArrayList<UserBeans>) userMapper.selectAllUserNameAndAge();
+			for (UserBeans user : result) {
+				System.out.println(user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void selectUsersWithFuzzyName() {
+		SqlSession session = DBTools.getSession();
+		UserMapper userMapper = session.getMapper(UserMapper.class);
+		try {
+			List<UserBeans> result = userMapper.selectUsersWithFuzzyName("isa");
 			for (UserBeans user : result) {
 				System.out.println(user);
 			}

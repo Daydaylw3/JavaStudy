@@ -1,10 +1,10 @@
 package com.mybatis.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.mybatis.beans.AccountBook;
 import com.mybatis.beans.UserBeans;
 
 public interface UserMapper {
@@ -55,4 +55,11 @@ public interface UserMapper {
 	 * @throws Exception
 	 * */
 	public List<UserBeans> selectAllUserNameAndAge() throws Exception;
+	/**
+	 * 模糊查询
+	 * @param name
+	 * @return List<UserBeans>
+	 * @throws Exception
+	 * */
+	public List<UserBeans> selectUsersWithFuzzyName(String name) throws Exception;
 }
