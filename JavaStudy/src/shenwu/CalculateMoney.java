@@ -126,7 +126,7 @@ public class CalculateMoney {
 	}
 	
 	public static void main(String[] args) {
-		count(4000);
+		count(998+1980-268-62);
 	}
 	
 	public void sort(ArrayList<GiftBag1> array) {
