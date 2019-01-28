@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
  * */
 public class FreezeAlien {
 	public static void main(String[] args) throws Exception {
-		ObjectOutput out = new ObjectOutputStream(new FileOutputStream("X.file"));
+		ObjectOutput out = new ObjectOutputStream(new FileOutputStream("src/io/serialized/X.file"));
 		Alien quellek = new Alien();
 		out.writeObject(quellek);
 		out.close();
