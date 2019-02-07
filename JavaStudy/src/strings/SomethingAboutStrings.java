@@ -49,5 +49,29 @@ public class SomethingAboutStrings {
 		String str4 = "rocket championship";
 		str3.intern();
 		System.out.println("str3 == str4: " + (str3 == str4));
+		
+		// 案例1		false
+//		String str1 = new String("abc") + new String("def");
+//		String str2 = "abcdef";
+//		str1.intern();
+//		System.out.println(str1 == str2);
+
+		// 案例2		1.8 true		1.6 false
+//		String str1 = new String("abc") + new String("def");
+//		str1.intern();
+//		String str2 = "abcdef";
+//		System.out.println(str1 == str2);
+
+		// 案例3		false
+//		String str1 = new String("abcdef");
+//		String str2 = "abcdef";
+//		str1.intern();
+//		System.out.println(str1 == str2);
+
+		// 案例4		false
+//		String str1 = new String("abcdef");
+//		str1.intern();
+//		String str2 = "abcdef";
+//		System.out.println(str1 == str2);
 	}
 }
