@@ -12,6 +12,7 @@ public class DeadlockingDiningPhilosophers {
 			ponder = Integer.parseInt(args[0]);
 		int size = 5;
 		if(args.length > 1)
+			size = Integer.parseInt(args[1]);
 		ExecutorService exec = Executors.newCachedThreadPool();
 		Chopstick[] sticks = new Chopstick[size];
 		for(int i = 0; i < size; i++)
