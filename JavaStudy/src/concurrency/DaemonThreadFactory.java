@@ -1,4 +1,4 @@
-package thread.daemon;
+package concurrency;
 
 import java.util.concurrent.ThreadFactory;
 
