@@ -22,11 +22,13 @@ public class SleepingTask extends LiftOff {
 			while(countDown-- > 0) {
 				System.out.print(status());
 				// old-style
-				// thread.sleep(100);
+				// Thread.sleep(100);
 				// java se5/6-style
 				TimeUnit.MILLISECONDS.sleep(100);
 			}
 		} catch (InterruptedException ex) {
+			// 异常不能跨线程传播回 main(), 所以必须在本地处理所有在任务内部
+			// 产生的异常
 			System.err.println("interrupted");
 		}
 	}
