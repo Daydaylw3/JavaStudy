@@ -11,15 +11,23 @@ import java.util.concurrent.TimeUnit;
  * @date 2019年2月18日
  */
 public class DaemonsDontRunFinally {
-	
+	public static void main(String[] args) throws Exception {
+		Thread t = new Thread(new ADaemon());
+		t.setDaemon(true);	// 注释掉这句话, finally 子句就会执行
+		t.start();
+	}
 }
 
 class ADaemon implements Runnable {
 	@Override
 	public void run() {
-//		try {
-//			System.out.println("starting adaemon");
-//			TimeUnit.
-//		}
+		try {
+			System.out.println("starting adaemon");
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e) {
+			System.out.println("exiting via interruptedexception");
+		} finally {
+			System.out.println("this should always run?");
+		}
 	}
 }
