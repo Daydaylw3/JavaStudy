@@ -5,8 +5,14 @@ import java.util.concurrent.Executors;
 
 /**
  * @ClassName concurrency.SimplePriorities
- * @Description 21.2.6 优先级
- * @Todo 用Mac补上注释
+ * @Description 21.2.6 优先级<p>
+ * 线程的优先级将该线程的重要性传递给了调度器。尽管CPU处理
+ * 现有线程集的顺序是不确定的，但是调度器将倾向于让优先权最
+ * 高的线程先执行。然而，这并不是意味着优先权较低的线程将得
+ * 不到执行(也就是说，优先权不会导致死锁)。优先级较低的线程
+ * 仅仅是执行的频率较低。
+ * 在绝大多数时间里，所有线程都应该以默认的优先级运行。试图
+ * 操纵线程优先级通常是一种错误。
  * 
  * @author dayday
  * @date 2019年2月17日
