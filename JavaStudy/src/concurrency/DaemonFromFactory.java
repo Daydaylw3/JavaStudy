@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @ClassName concurrency.DaemonFromFactory
  * @Description 21.2.8 后台线程<p>
- * @Todo 用Mac补上注释
+ * 你现在可以用一个新的DaemonThreadFactory作为参数传递给Executor.newCachedThreadPool()
  * 
  * @see concurrency.DaemonThreadFactory
  * 

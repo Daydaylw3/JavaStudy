@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @ClassName concurrency.DaemonsDontRunFinally
  * @Description 21.2.8 后台线程<p>
- * @Todo 用Mac补上注释
+ * 后台进程在不执行finally子句的情况下就会终止其run()方法
  * 
  * @author dayday
  * @date 2019年2月18日
