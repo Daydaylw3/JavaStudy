@@ -15,7 +15,7 @@ public class Test {
 		System.out.println(System.getProperty("sun.boot.class.path"));
 		System.out.println(System.getProperty("java.ext.dirs"));
 		System.out.println(System.getProperty("java.class.path"));
-		
+
 		System.out.println(" --- 2019.3.2 --- ");
 		ClassLoader classLoader = Test.class.getClassLoader();
 		System.out.println(classLoader);
