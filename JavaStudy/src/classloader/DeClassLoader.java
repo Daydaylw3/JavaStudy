@@ -14,7 +14,6 @@ public class DeClassLoader extends ClassLoader {
 	private String mLibPath;
 	
 	protected  DeClassLoader(String path) {
-		// TODO Auto-generated constructor stub
 		mLibPath = path;
 	}
 

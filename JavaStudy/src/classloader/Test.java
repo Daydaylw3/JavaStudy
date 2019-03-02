@@ -23,7 +23,12 @@ public class Test {
 		System.out.println(classLoader.getParent().getParent());
 	}
 	
+	/*
+	 * 修改该方法输出的版本号, 重新编译该类, 然后将.class文件替换对应目录下的.class文件
+	 * 即可看到类被热加载
+	 * */
 	public void printVersion() {
 		System.out.println("当前为版本1.0");
+//		System.out.println("当前为版本2.0");
 	}
 }
