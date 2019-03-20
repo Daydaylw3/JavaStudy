@@ -1,11 +1,11 @@
 package socket.keepalive;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.awt.image.ImagingOpException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @ClassName socket.keepalive.MyServer.java
@@ -18,16 +18,15 @@ public class MyServer {
 	
 	private ServerSocket serverSocket;
 	
-	private long lastReceiveTime;
-	
 	public MyServer(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
 	}
 	
-	public void start() throws IOException {
+	public void startServer() throws IOException {
 		while (true) {
 			System.out.println("waiting for next client...");
 			Socket socket = serverSocket.accept();
+			// 得到客户端的连接, 用一个线程来接收该socket的消息
 			new Thread(new RecMsg(socket)).start();
 		}
 	}
@@ -39,17 +38,25 @@ public class MyServer {
 		}
 		@Override
 		public void run() {
-			// 为什么一定要加这一句? 
-			while (true) {
+			while (! s.isClosed()) {
+				BufferedReader reader = null;
 				try {
-					DataInputStream in = new DataInputStream(s.getInputStream());
-					if (in.available() > 0) {
-						byte[] b = new byte[512];
-						in.read(b);
-						System.out.println(Thread.currentThread().getName() + ":  " + new String(b));
+					reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+					String line;
+					if ((line = reader.readLine()) != null && !"heart beat".equals(line)) {
+						System.out.println(Thread.currentThread().getName() + " : " + line);
+					}
+					if ("bye".equals(line)) {
+						reader.close();
+						s.close();
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						reader.close();
+						s.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
@@ -57,65 +64,6 @@ public class MyServer {
 	
 	public static void main(String[] args) throws Exception {
 		MyServer server = new MyServer(65432);
-		server.start();
-	}
-	
-	class SendHeartBeat implements Runnable {
-		
-		private Socket socket;
-		
-		public SendHeartBeat(Socket socket) {
-			this.socket = socket;
-		}
-		
-		@Override
-		public void run() {
-			if (socket != null) {
-				try {
-					DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-					while (true) {
-						dos.write("heart beat".getBytes());
-						dos.flush();
-						TimeUnit.MILLISECONDS.sleep(2000);
-					}
-				} catch (IOException | InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-	}
-	
-	private class ReceiveHeartBeat implements Runnable {
-		private Socket socket;
-		
-		public ReceiveHeartBeat(Socket socket) {
-			this.socket = socket;
-		}
-		
-		@Override
-		public void run() {
-			if (socket != null) {
-				try {
-					DataInputStream dis = new DataInputStream(socket.getInputStream());
-					byte[] b = new byte[1024];
-					while (System.currentTimeMillis() - lastReceiveTime < 5000) {
-						if (dis.available() > 0) {
-							dis.read(b);
-							String rec = new String(b);
-							if ("heart beat".equals(rec)) {
-								lastReceiveTime = System.currentTimeMillis();
-							}
-						}
-					}
-					dis.close();
-					socket.close();
-					socket = null;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
+		server.startServer();
 	}
 }
