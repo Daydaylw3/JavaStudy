@@ -1,4 +1,4 @@
-package thread.criticalsection;
+package concurrency;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,7 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 /**
+ * @ClassName concurrency.CriticalSection.java
+ * @Description 21.3.5 临界区</br>
  * 有时只是希望多个线程同时访问方法内部的部分代码而不是防止访问整个方法。
  * 通过这种方式方法分离出来的代码段被称为 “临界区”，它也使用synchronized
  * 关键字建立。这里，synchronized被用来指定某个对象，此对象的锁被用来对花
@@ -19,7 +22,39 @@ import java.util.concurrent.locks.ReentrantLock;
  * 这也被称为“同步控制块”；在进入此段代码前，必须得到syncObject对象的锁。
  * 使用同步代码块，而不是对整个方法进行同步控制，可以使多个任务访问对象的时间
  * 性能得到显著提升。
- * */
+ * 
+ * @author dayday
+ * @date 2019年3月20日
+ */
+public class CriticalSection {
+	static void testApproaches(PairManager pman1, PairManager pman2) {
+		ExecutorService exec = Executors.newCachedThreadPool();
+		PairManipulator 
+			pm1 = new PairManipulator(pman1),
+			pm2 = new PairManipulator(pman2);
+		PairChecker 
+			pcheck1 = new PairChecker(pman1),
+			pcheck2 = new PairChecker(pman2);
+		exec.execute(pm1);
+		exec.execute(pm2);
+		exec.execute(pcheck1);
+		exec.execute(pcheck2);
+		try {
+			TimeUnit.MILLISECONDS.sleep(500);
+		} catch(InterruptedException e) {
+			System.out.println("Sleep interrupted");
+		}
+		System.out.println("pm1: " + pm1 + "\npm2: " + pm2);
+		System.exit(0);
+	}
+	public static void main(String[] args) {
+		PairManager 
+			pman1 = new PairManager1(),
+			pman2 = new PairManager2();
+		testApproaches(pman1, pman2);
+	}
+}
+
 class Pair{	//非线程安全
 	private int x, y;
 	public Pair(int x, int y) {
@@ -44,11 +79,14 @@ class Pair{	//非线程安全
 	public String toString() {
 		return "x: " + x + " y: " + y;
 	}
+	
+	@SuppressWarnings("serial")
 	public class PairValuesNotEqualException extends RuntimeException {
 		public PairValuesNotEqualException() {
 			super("Pair values not equal: " + Pair.this);
 		}
 	}
+	
 	public void checkState() {
 		if(x != y)
 			throw new PairValuesNotEqualException();
@@ -66,9 +104,7 @@ abstract class PairManager {
 	AtomicInteger checkCounter = new AtomicInteger(0);
 	protected Pair p = new Pair();
 	protected Lock lock = new ReentrantLock();
-	/**
-	 * 将一个Pair对象添加到了synchronized ArrayList中，所以这个操作是线程安全的。
-	 * */
+	// 将一个Pair对象添加到了synchronized ArrayList中，所以这个操作是线程安全的。
 	private List<Pair> storage =
 			Collections.synchronizedList(new ArrayList<Pair>());	
 	public synchronized Pair getPair() {
@@ -76,7 +112,7 @@ abstract class PairManager {
 			lock.lock();
 			//保存一个副本以保证原始数据安全
 			return new Pair(p.getX(), p.getY());
-		}finally {
+		} finally {
 			lock.unlock();
 		}
 	}
@@ -84,7 +120,7 @@ abstract class PairManager {
 		storage.add(p);
 		try {
 			TimeUnit.MILLISECONDS.sleep(50);
-		}catch(InterruptedException ignore) {
+		} catch(InterruptedException ignore) {
 			
 		}
 	}
@@ -92,6 +128,7 @@ abstract class PairManager {
 }
 //不使用临界区
 class PairManager1 extends PairManager{
+	@Override
 	public synchronized void increment() {
 		p.incrementX();
 		p.incrementY();
@@ -100,6 +137,7 @@ class PairManager1 extends PairManager{
 }
 //使用临界区
 class PairManager2 extends PairManager{
+	@Override
 	public void increment() {
 		Pair temp;
 		synchronized(this) {
@@ -113,7 +151,7 @@ class PairManager2 extends PairManager{
 /**
  * 被创建用来测试两种不同类型的PairManager
  * */
-class PairManipulator implements Runnable{
+class PairManipulator implements Runnable {
 	private PairManager pm;
 	public PairManipulator(PairManager pm) {
 		this.pm = pm;
@@ -146,37 +184,5 @@ class PairChecker implements Runnable {
 				throw e;
 			}
 		}
-	}
-}
-/**
- * 一般来说，对于PairChecker的检查频率，PairManager1.increment()不允许有PairManager2.increment()那样多。
- * 后者采用同步控制块进行同步，所以对象不加锁的时间更长。使得其他线程能在安全的情况下更多的访问。
- * */
-public class CriticalSection {
-	static void testApproaches(PairManager pman1, PairManager pman2) {
-		ExecutorService exec = Executors.newCachedThreadPool();
-		PairManipulator 
-			pm1 = new PairManipulator(pman1),
-			pm2 = new PairManipulator(pman2);
-		PairChecker 
-			pcheck1 = new PairChecker(pman1),
-			pcheck2 = new PairChecker(pman2);
-		exec.execute(pm1);
-		exec.execute(pm2);
-		exec.execute(pcheck1);
-		exec.execute(pcheck2);
-		try {
-			TimeUnit.MILLISECONDS.sleep(500);
-		}catch(InterruptedException e) {
-			System.out.println("Sleep interrupted");
-		}
-		System.out.println("pm1: " + pm1 + "\npm2: " + pm2);
-		System.exit(0);
-	}
-	public static void main(String[] args) {
-		PairManager 
-			pman1 = new PairManager1(),
-			pman2 = new PairManager2();
-		testApproaches(pman1, pman2);
 	}
 }
