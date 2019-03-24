@@ -108,13 +108,8 @@ abstract class PairManager {
 	private List<Pair> storage =
 			Collections.synchronizedList(new ArrayList<Pair>());	
 	public synchronized Pair getPair() {
-		try {
-			lock.lock();
-			//保存一个副本以保证原始数据安全
-			return new Pair(p.getX(), p.getY());
-		} finally {
-			lock.unlock();
-		}
+		//保存一个副本以保证原始数据安全
+		return new Pair(p.getX(), p.getY());
 	}
 	protected void store(Pair p) {
 		storage.add(p);
@@ -176,10 +171,10 @@ class PairChecker implements Runnable {
 	}
 	public void run() {
 		while(true) {
-			pm.checkCounter.incrementAndGet();
+			pm.checkCounter.incrementAndGet();	// checkCounter++
 			try {
 				pm.getPair().checkState();
-			}catch(Exception e) {
+			} catch(Exception e) {
 				System.out.println(pm.getPair().toString());
 				throw e;
 			}
