@@ -1,4 +1,4 @@
-package thread.interrupted;
+package concurrency;
 
 import java.io.InputStream;
 import java.net.ServerSocket;
