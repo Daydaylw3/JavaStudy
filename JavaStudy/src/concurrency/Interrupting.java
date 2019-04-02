@@ -92,7 +92,7 @@ class IOBlocked implements Runnable{
  * */
 class SynchronizedBlocked implements Runnable {
 	public synchronized void f() {
-		while(true) {
+		while (true) {
 			Thread.yield();
 		}
 	}
