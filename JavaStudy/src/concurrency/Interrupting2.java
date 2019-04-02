@@ -1,14 +1,30 @@
-package thread.interrupted;
+package concurrency;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * @ClassName concurrency.Interrupting2
+ * @Description 21.4.3 中断</br>
  * 无论在任何时刻只要任务 以不可中断的方式被阻塞，都有潜在的会锁住程序的可能
  * Java SE5并发类库添加了一个特性，即在ReentrantLock上阻塞的任务具备可以
  * 被中断的能力，这与在synchronized方法或临界区上阻塞的任务完全不同
- * */
+ * 
+ * @author daydaylw3
+ * @date Apr 1, 2019
+ */
+public class Interrupting2 {
+	public static void main(String[] args) throws Exception{
+		Thread t = new Thread(new Blocked2());
+		t.start();
+		TimeUnit.SECONDS.sleep(1);
+		System.out.println("Issuing t.interrupt()");
+		// 尽管不太可能,但是对t.interrupt()的调用确实可以发生在blocked.f()的调用之前
+		t.interrupt();
+	}
+}
+
 class BlockedMutex {
 	private Lock lock = new ReentrantLock();
 	public BlockedMutex() {
@@ -30,7 +46,7 @@ class BlockedMutex {
 			 * 		2）在等待获取锁的同时被中断。 则抛出 InterruptedException，并且清除当前线程的已中断状态。
 			 * 6）在此实现中，因为此方法是一个显式中断点，所以要优先考虑响应中断，而不是响应锁的普通获取或 重入获取。
 			 * */
-			lock.lockInterruptibly();	//特殊的获取锁的方式，在未获取锁的时候会阻塞，但是会响应中断
+			lock.lockInterruptibly();	// 特殊的获取锁的方式，在未获取锁的时候会阻塞，但是会响应中断
 			
 			System.out.println("lock acquired in f()");
 		}catch(InterruptedException e) {
@@ -45,15 +61,5 @@ class Blocked2 implements Runnable {
 		System.out.println("Waiting for f() in BlockedMutex");
 		blocked.f();
 		System.out.println("Broken out of blocked call");
-	}
-}
-
-public class Interrupting2 {
-	public static void main(String[] args) throws Exception{
-		Thread t = new Thread(new Blocked2());
-		t.start();
-		TimeUnit.SECONDS.sleep(1);
-		System.out.println("Issuing t.interrupt()");
-		t.interrupt();
 	}
 }
