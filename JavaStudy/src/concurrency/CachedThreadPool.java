@@ -17,5 +17,6 @@ public class CachedThreadPool {
 			exec.execute(new LiftOff());
 		}
 		exec.shutdown();
+		exec.shutdownNow();
 	}
 }

@@ -1,4 +1,4 @@
-package thread.interrupted;
+package concurrency;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,8 +13,32 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 幸运的是，nio类提供了更人性化的I/O中断。被阻塞的nio通道会自动地相应中断
- * */
+ * @ClassName concurrency.NIOInterrutption
+ * @Description 21.4.3 中断</br>
+ * nio类提供了更人性化的I/O中断。被阻塞的nio通道会自动地相应中断
+ * 
+ * @author daydaylw3
+ * @date Apr 1, 2019
+ */
+public class NIOInterrutption {
+	public static void main(String[] args) throws Exception{
+		ExecutorService exec = Executors.newCachedThreadPool();
+		ServerSocket socket = new ServerSocket(8080);
+		InetSocketAddress isa = 
+				new InetSocketAddress("localhost", 8080);
+		SocketChannel sc1 = SocketChannel.open(isa);
+		SocketChannel sc2 = SocketChannel.open(isa);
+		Future<?> f = exec.submit(new NIOBlocked(sc1));
+		exec.execute(new NIOBlocked(sc2));
+		exec.shutdown();
+		TimeUnit.SECONDS.sleep(1);
+		f.cancel(true);	// produce an interrupt via cancel
+		TimeUnit.SECONDS.sleep(1);
+//		exec.shutdownNow();
+		sc2.close();	// release the block by closing the channel
+	}
+}
+
 class NIOBlocked implements Runnable {
 	private final SocketChannel sc;
 	public NIOBlocked(SocketChannel sc) {
@@ -33,23 +57,4 @@ class NIOBlocked implements Runnable {
 		}
 		System.out.println("Exiting NIOBlocked.run() " + this);
 	}
-}
-
-public class NIOInterrutption {
-	public static void main(String[] args) throws Exception{
-		ExecutorService exec = Executors.newCachedThreadPool();
-		ServerSocket socket = new ServerSocket(8080);
-		InetSocketAddress isa = 
-				new InetSocketAddress("localhost", 8080);
-		SocketChannel sc1 = SocketChannel.open(isa);
-		SocketChannel sc2 = SocketChannel.open(isa);
-		Future<?> f = exec.submit(new NIOBlocked(sc1));
-		exec.execute(new NIOBlocked(sc2));
-		exec.shutdown();
-		TimeUnit.SECONDS.sleep(1);
-		f.cancel(true);
-		TimeUnit.SECONDS.sleep(1);
-		sc2.close();
-	}
-
 }

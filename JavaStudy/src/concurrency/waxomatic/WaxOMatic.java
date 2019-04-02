@@ -1,8 +1,27 @@
-package thread.cooperation;
+package concurrency.waxomatic;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+/**
+ * @ClassName concurrency.waxomatic.WaxOMatic
+ * @Description 21.5.1 wait()与notifyAll()</br>
+ * 
+ * 
+ * @author daydaylw3
+ * @date Apr 2, 2019
+ */
+public class WaxOMatic {
+	public static void main(String[] args) throws Exception {
+		Car car = new Car();
+		ExecutorService exec = Executors.newCachedThreadPool();
+		exec.execute(new WaxOff(car));
+		exec.execute(new WaxOn(car));
+		TimeUnit.SECONDS.sleep(5);
+		exec.shutdownNow();
+	}
+}
 
 class Car {
 	private boolean waxOn = false;
@@ -62,16 +81,4 @@ class WaxOff implements Runnable {
 		}
 		System.out.println("End Wax Off task");
 	}
-}
-
-public class WaxOMatic {
-	public static void main(String[] args) throws Exception{
-		Car car = new Car();
-		ExecutorService exec = Executors.newCachedThreadPool();
-		exec.execute(new WaxOff(car));
-		exec.execute(new WaxOn(car));
-		TimeUnit.SECONDS.sleep(5);
-		exec.shutdownNow();
-	}
-
 }
