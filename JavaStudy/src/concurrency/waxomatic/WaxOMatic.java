@@ -26,37 +26,39 @@ public class WaxOMatic {
 class Car {
 	private boolean waxOn = false;
 	public synchronized void waxed() {
-		waxOn = true;	//打蜡结束，准备抛光
+		waxOn = true;	// 打蜡结束，准备抛光
 		notifyAll();
 	}
 	public synchronized void buffed() {
-		waxOn = false;	//抛光结束，准备打蜡
+		waxOn = false;	// 抛光结束，准备打蜡
 		notifyAll();		
 	}
 	public synchronized void waitForWaxing() throws InterruptedException{
-		while(!waxOn)
+		while (!waxOn) {
 			wait();
+		}
 	}
 	public synchronized void waitForBuffing() throws InterruptedException{
-		while(waxOn)
+		while (waxOn) {
 			wait();
+		}
 	}
 }
 
-class WaxOn implements Runnable{
+class WaxOn implements Runnable {
 	private Car car;
 	public WaxOn(Car c) {
 		car = c;
 	}
 	public void run() {
 		try {
-			while(!Thread.interrupted()) {
+			while (!Thread.interrupted()) {
 				System.out.print("Wax On! ");
 				TimeUnit.MILLISECONDS.sleep(200);
 				car.waxed();
 				car.waitForBuffing();
 			}
-		}catch(InterruptedException e) {
+		} catch (InterruptedException e) {
 			System.out.println("Exiting via interrupt");
 		}
 		System.out.println("Ending Wax On task");
@@ -70,13 +72,13 @@ class WaxOff implements Runnable {
 	}
 	public void run() {
 		try {
-			while(!Thread.interrupted()) {
+			while (!Thread.interrupted()) {
 				System.out.print("Wax Off! ");
 				TimeUnit.MILLISECONDS.sleep(200);
 				car.buffed();
 				car.waitForWaxing();
 			}
-		}catch(InterruptedException e) {
+		} catch (InterruptedException e) {
 			System.out.println("Exitiing via interrupt");
 		}
 		System.out.println("End Wax Off task");
