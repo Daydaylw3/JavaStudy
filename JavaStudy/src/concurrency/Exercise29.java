@@ -1,4 +1,4 @@
-package thread.cooperation;
+package concurrency;
 /**
  * 修改ToastOMatic.java，使用两个单独的组装线来创建涂有花生黄油和果冻
  * 的吐司三明治（一个用于花生黄油，一个用于果冻，然后把两条线合并）。
