@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 /**
- * @ClassName thread.cooperation.TestBlockingQueues.java
+ * @ClassName concurrency.TestBlockingQueues
  * @Description 21.5.4 生产者-消费者队列
  * 
  * @author dayday
