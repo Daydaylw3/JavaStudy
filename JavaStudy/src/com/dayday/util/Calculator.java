@@ -24,7 +24,8 @@ public class Calculator {
 //		n7.setNext(n8);
 //		n8.setNext(n9);
 //		System.out.println(n1);
-		System.out.print(countExp("1*5 +6*9*5+6"));
+//		System.out.print(countExp("1*5 +6*9*5+6"));
+//		System.out.println();
 //		int[] n = new int[] {
 //				1, 2, 3, 4
 //		};
@@ -35,20 +36,20 @@ public class Calculator {
 //		n[i - 1] = n[++i] + n[i];
 //		for (int in : n)
 //			System.out.print(in + " ");
+		System.out.println(getPostfixExp(getInfixExp(preDealExp("(a+b)*(c+d)"))));
+		System.out.println(getPostfixExp(getInfixExp(preDealExp("a+b*(c+d)"))));
 	}
 	
 	private static HashMap<String, Integer> opr = new HashMap<>(8);
 	
 	static {
 		opr.put("(", 5);
-		opr.put("（", 5);
 		opr.put("^", 4);
 		opr.put("*", 3);
 		opr.put("/", 3);
 		opr.put("+", 2);
 		opr.put("-", 2);
 		opr.put(")", 1);
-		opr.put("）", 1);
 	}
 	
 	public static double countExp(String exp) {
@@ -58,7 +59,7 @@ public class Calculator {
 	/**
 	 * 计算后缀表达式
 	 * */
-	private static double countPostfixExp(Node head) {
+	public static double countPostfixExp(Node head) {
 		/*
 		 * 1,创建数字栈
 		 * 2,如果为数字,直接入栈
@@ -87,33 +88,45 @@ public class Calculator {
 	/**
 	 * 将中缀转后缀
 	 * */
-	private static Node getPostfixExp(Node head) {
+	public static Node getPostfixExp(Node head) {
 		// 操作符栈
-		Node[] oprStack = new Node[3];
+		Node[] oprStack = new Node[10];
 		// 指针
 		int top = 0;
-		Node tmp = head.next;
-		Node postfixExp = head;
-		postfixExp.next = null;
+		Node tmp = head;
+		Node postfixExp = null;
 		while (tmp != null) {
 			/*
 			 * 1.若为数值,则入队末尾
 			 * 2.若为操作符,则与操作符栈中栈顶元素比较优先级
 			 *   2.1.若优先级大于栈顶,则入栈
-			 *   2.2.若优先级不大于栈顶,则栈顶元素出栈入队列末尾
+			 *   2.2.若优先级不大于栈顶
+			 *   	2.2.1.若操作符不为")",则栈顶元素出栈入队列末尾
+			 *   	2.2.2.若操作符为")",则将操作符出栈入队列至最顶的"(",且"("和")"不入队列
 			 * 3.若为空,则将操作符栈元素出栈
 			 * */
 			Node next = tmp.next;
 			tmp.next = null;
 			if (!isOpr(tmp)) {
 				// 是数字
-				postfixExp.addLast(tmp);
+				if (postfixExp == null)
+					postfixExp = tmp;
+				else
+					postfixExp.addLast(tmp);
 			} else {
-				if (comparePriority(oprStack[top], tmp)) {
+				// 是操作符
+				if (isLeftParenthesis(oprStack[top]) || comparePriority(oprStack[top], tmp)) {
 					oprStack[oprStack[top] == null ? top : ++top] = tmp;
-				} else {
+				} else if (!isRightParenthesis(tmp)) {
 					postfixExp.addLast(oprStack[top]);
 					oprStack[top] = tmp;
+				} else {
+					while (!isLeftParenthesis(oprStack[top])) {
+						postfixExp.addLast(oprStack[top]);
+						oprStack[top--] = null;
+					}
+					oprStack[top] = null;
+					if (top > 0) top--;
 				}
 			}
 			if (next == null) {
@@ -129,7 +142,7 @@ public class Calculator {
 	/**
 	 * 将表达式转化为中缀
 	 * */
-	private static Node getInfixExp(String exp) {
+	public static Node getInfixExp(String exp) {
 		String[] tmp = exp.split(" ");
 		Node result = new Node(tmp[0], null);
 		Node tmpN = result;
@@ -147,18 +160,26 @@ public class Calculator {
 	 * <br>1, 没有连续的两个空格
 	 * <br>2, 数字和操作符中间有空格
 	 * <br>3, "."符号后不能有空格
+	 * <br>4, 没有中文的小括号
 	 * 
 	 * @param exp
 	 * @return
 	 */
-	private static String preDealExp(String exp) {
+	public static String preDealExp(String exp) {
 		// 先去掉所有空格
 		StringBuilder tmp = new StringBuilder(exp), newExp = new StringBuilder();
 		while (tmp.indexOf(" ") >= 0) tmp.deleteCharAt(tmp.indexOf(" "));
+		while (tmp.indexOf("（") >= 0) tmp.replace(tmp.indexOf("（"), tmp.indexOf("（") + 1, "(");
+		while (tmp.indexOf("）") >= 0) tmp.replace(tmp.indexOf("）"), tmp.indexOf("）") + 1, ")");
 		for (int i = 0; i < tmp.length(); i++) {
 			char c;
 			if (isOpr(c = tmp.charAt(i))) {
-				newExp.append(" " + c + " ");
+				if (isLeftParenthesis(c)) 
+					newExp.append(c + " ");
+				else if (isRightParenthesis(c)) 
+					newExp.append(" " + c);
+				else 
+					newExp.append(" " + c + " ");
 			} else {
 				newExp.append(c);
 			}
@@ -204,6 +225,43 @@ public class Calculator {
 	 * */
 	private static boolean isOpr(char c) {
 		return opr.containsKey(String.valueOf(c));
+	}
+	
+	/**
+	 * 判断是否为左括号
+	 * @param n
+	 * @return
+	 */
+	private static boolean isLeftParenthesis(Node n) {
+		if (n == null) return false;
+		return "(".equals(n.value);
+	}
+	
+	/**
+	 * 判断是否为左括号
+	 * @param n
+	 * @return
+	 */
+	private static boolean isLeftParenthesis(char c) {
+		return "(".equals(String.valueOf(c));
+	}
+	
+	/**
+	 * 判断是否为右括号
+	 * @param n
+	 * @return
+	 */
+	private static boolean isRightParenthesis(Node n) {
+		return ")".equals(n.value);
+	}
+	
+	/**
+	 * 判断是否为右括号
+	 * @param n
+	 * @return
+	 */
+	private static boolean isRightParenthesis(char c) {
+		return ")".equals(String.valueOf(c));
 	}
 	
 	/**
