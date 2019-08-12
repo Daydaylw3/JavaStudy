@@ -5,39 +5,15 @@ import java.util.HashMap;
 public class Calculator {
 	
 	public static void main(String[] args) {
-//		hanoi(20, 'A', 'B', 'C');
-//		Node n1 = new Node("A", null),
-//				n2 = new Node("*", null),
-//				n3 = new Node("B", null),
-//				n4 = new Node("+", null),
-//				n5 = new Node("C", null),
-//				n6 = new Node("+", null),
-//				n7 = new Node("D", null),
-//				n8 = new Node("*", null),
-//				n9 = new Node("E", null);
-//		n1.setNext(n2);
-//		n2.setNext(n3);
-//		n3.setNext(n4);
-//		n4.setNext(n5);
-//		n5.setNext(n6);
-//		n6.setNext(n7);
-//		n7.setNext(n8);
-//		n8.setNext(n9);
-//		System.out.println(n1);
-//		System.out.print(countExp("1*5 +6*9*5+6"));
-//		System.out.println();
-//		int[] n = new int[] {
-//				1, 2, 3, 4
-//		};
-//		for (int in : n)
-//			System.out.print(in + " ");
-//		System.out.println();
-//		int i = 1;
-//		n[i - 1] = n[++i] + n[i];
-//		for (int in : n)
-//			System.out.print(in + " ");
+		// 测试
 		System.out.println(getPostfixExp(getInfixExp(preDealExp("(a+b)*(c+d)"))));
 		System.out.println(getPostfixExp(getInfixExp(preDealExp("a+b*(c+d)"))));
+		System.out.println(getPostfixExp(getInfixExp(preDealExp("a+b*(c+d*（e-f）)"))));
+		System.out.println(getPostfixExp(getInfixExp(preDealExp("((a+b)*c)*d+e"))));
+		System.out.println(countExp("1+4+8+9*10*13/6"));
+		System.out.println(countExp("1+2+3+4/7*3"));
+		System.out.println(countPostfixExp(getPostfixExp(getInfixExp(preDealExp("10-2*4-2")))));
+		System.out.println(countPostfixExp(getPostfixExp(getInfixExp(preDealExp("()10-2*4-2")))));	// )1024*-(2-
 	}
 	
 	private static HashMap<String, Integer> opr = new HashMap<>(8);
@@ -47,6 +23,7 @@ public class Calculator {
 		opr.put("^", 4);
 		opr.put("*", 3);
 		opr.put("/", 3);
+		opr.put("÷", 3);
 		opr.put("+", 2);
 		opr.put("-", 2);
 		opr.put(")", 1);
@@ -75,7 +52,7 @@ public class Calculator {
 				numStack[++top] = tmp;
 				size ++;
 			} else {
-				numStack[top - 1] = new Node(String.valueOf(countExp(numStack[top - 1], tmp, numStack[top--])), null);
+				numStack[top - 1] = new Node(countExp(numStack[top - 1], tmp, numStack[top--]), null);
 				size --;
 			}
 			tmp = next;
@@ -94,49 +71,42 @@ public class Calculator {
 		// 指针
 		int top = 0;
 		Node tmp = head;
-		Node postfixExp = null;
+		Node postfixExp = new Node("", null);
 		while (tmp != null) {
 			/*
-			 * 1.若为数值,则入队末尾
-			 * 2.若为操作符,则与操作符栈中栈顶元素比较优先级
-			 *   2.1.若优先级大于栈顶,则入栈
-			 *   2.2.若优先级不大于栈顶
-			 *   	2.2.1.若操作符不为")",则栈顶元素出栈入队列末尾
-			 *   	2.2.2.若操作符为")",则将操作符出栈入队列至最顶的"(",且"("和")"不入队列
-			 * 3.若为空,则将操作符栈元素出栈
+			 * 1.若c为数值,则入队末尾
+			 * 2.若c为操作符
+			 * 	2.1.c为"(",入栈
+			 * 	2.2.c优先级高于栈顶元素,入栈
+			 * 	2.3.c为")",则将操作符出栈入队列至最顶的"(",且"("和")"不入队列
+			 * 	2.2.c不为")",则将操作符栈顶依次出栈入队列至栈顶元素优先级小于c,或者栈顶元素为"(",
+			 * 		然后将c入栈
 			 * */
 			Node next = tmp.next;
 			tmp.next = null;
 			if (!isOpr(tmp)) {
-				// 是数字
-				if (postfixExp == null)
-					postfixExp = tmp;
-				else
-					postfixExp.addLast(tmp);
-			} else {
-				// 是操作符
-				if (isLeftParenthesis(oprStack[top]) || comparePriority(oprStack[top], tmp)) {
-					oprStack[oprStack[top] == null ? top : ++top] = tmp;
-				} else if (!isRightParenthesis(tmp)) {
+				postfixExp.addLast(tmp);
+			} else if (isLeftParenthesis(oprStack[top]) || isUpperPriority(oprStack[top], tmp)) {
+				oprStack[oprStack[top] == null ? top : ++top] = tmp;
+			} else if (isRightParenthesis(tmp)) {
+				while (!isLeftParenthesis(oprStack[top])) {
 					postfixExp.addLast(oprStack[top]);
-					oprStack[top] = tmp;
-				} else {
-					while (!isLeftParenthesis(oprStack[top])) {
-						postfixExp.addLast(oprStack[top]);
-						oprStack[top--] = null;
-					}
-					oprStack[top] = null;
-					if (top > 0) top--;
+					oprStack[top--] = null;
 				}
-			}
-			if (next == null) {
-				// 出栈所有的操作符
-				while (top >= 0)
-					postfixExp.addLast(oprStack[top--]);
+				oprStack[top] = null;
+				if (top > 0) top--;
+			} else {
+				while (top >= 0 && !isLeftParenthesis(tmp) && isNotUpperPriority(oprStack[top], tmp)) {
+					postfixExp.addLast(oprStack[top]);
+					oprStack[top--] = null;
+				}
+				oprStack[++top] = tmp;
 			}
 			tmp = next;
 		}
-		return postfixExp;
+		while (top >= 0)
+			postfixExp.addLast(oprStack[top--]);
+		return postfixExp.next;
 	}
 	
 	/**
@@ -206,6 +176,8 @@ public class Calculator {
 				return Double.valueOf(num1.value) * Double.valueOf(num2.value);
 			case "/":
 				return Double.valueOf(num1.value) / Double.valueOf(num2.value);
+			case "÷":
+				return Double.valueOf(num1.value) / Double.valueOf(num2.value);
 			case "^":
 				return Math.pow(Double.valueOf(num1.value), Double.valueOf(num2.value));
 			default:
@@ -265,15 +237,27 @@ public class Calculator {
 	}
 	
 	/**
-	 * 比较操作符优先级
+	 * <code>cur</code> > <code>pre</code> ?
 	 * 
 	 * @param pre 被比较操作符
 	 * @param cur 当前操作符
-	 * @return true 大于
-	 * 			false 不大于
+	 * @return true 高于
+	 * 			false 不高于
 	 * */
-	private static boolean comparePriority(Node pre, Node cur) {
+	private static boolean isUpperPriority(Node pre, Node cur) {
 		return pre == null ? true : opr.get(cur.value) > opr.get(pre.value);
+	}
+	
+	/**
+	 * <code>pre</code> >= <code>cur</code> ?
+	 * 
+	 * @param pre
+	 * @param cur
+	 * @return true 是
+	 * 			false 否
+	 */
+	private static boolean isNotUpperPriority(Node pre, Node cur) {
+		return pre == null ? false : opr.get(pre.value) >= opr.get(cur.value);
 	}
 	
 	private static class Node {
@@ -284,6 +268,11 @@ public class Calculator {
 		
 		public Node(String value, Node next) {
 			this.value = value;
+			this.next = next;
+		}
+		
+		public Node(double value, Node next) {
+			this.value = String.valueOf(value);
 			this.next = next;
 		}
 		
