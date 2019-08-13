@@ -39,3 +39,48 @@ from customers inner join orders,
 orders inner join orderitems
 on orderitems.order_num = orders.order_num
 on orders.cust_id = customers.cust_id;
+## 自联结
+select prod_id, prod_name
+from products
+where vend_id = (
+	select vend_id
+	from products
+	where prod_id='DTNTR'
+);
+select p1.prod_id, p1.prod_name
+from products p1, products p2
+where p1.vend_id = p2.vend_id
+and p2.prod_id='DTNTR';
+## 自然联结, 应该至少有一个列出现在不止一个表中, 可能会有相同的列多次出现, 自然联结排除多次出现, 使得
+## 每个列只出现一次
+## 你只能选择那些唯一的列. 对表使用通配符(select *), 对其他表的列使用明确的子句
+select c.*, o.order_num, o.order_date, oi.prod_id, oi.quantity, oi.item_price
+from customers c, orders o, orderitems oi
+where c.cust_id = o.cust_id
+and oi.order_num = o.order_num
+and prod_id = 'FB';
+## 外部联结: 联结包括了那些在相关表中没有包含的行
+## 这是一个简单的内联
+select customers.cust_id, orders.order_num
+from customers inner join orders
+on customers.cust_id = orders.cust_id;
+## 外联, left指定了outer join左边为包括了所有行的表
+select customers.cust_id, orders.order_num
+from customers left outer join orders
+on customers.cust_id = orders.cust_id;
+select customers.cust_id, orders.order_num
+from customers right outer join orders
+on customers.cust_id = orders.cust_id;
+## 使用带聚集函数的联结
+## 内联
+select customers.cust_name, customers.cust_id,
+count(orders.order_num) num_ord
+from customers inner join orders
+on customers.cust_id = orders.cust_id
+group by customers.cust_id;
+## 外联
+select customers.cust_name, customers.cust_id,
+count(orders.order_num) num_ord
+from customers left outer join orders
+on customers.cust_id = orders.cust_id
+group by customers.cust_id;
