@@ -84,3 +84,42 @@ count(orders.order_num) num_ord
 from customers left outer join orders
 on customers.cust_id = orders.cust_id
 group by customers.cust_id;
+## 使用union
+## 先使用单条语句
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5;
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 再使用union连接两条单独的查询
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 不使用union达到相同的效果
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5 or vend_id in (1001, 1002);
+## 取消或者包含重复的行
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union all
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 对组合查询结果排序
+## 只能在最后一条select子句之后添加order by语句
+## 对整个查询结果集进行排序
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union 
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002)
+order by vend_id;
