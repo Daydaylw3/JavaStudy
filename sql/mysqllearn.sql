@@ -39,3 +39,87 @@ from customers inner join orders,
 orders inner join orderitems
 on orderitems.order_num = orders.order_num
 on orders.cust_id = customers.cust_id;
+## 自联结
+select prod_id, prod_name
+from products
+where vend_id = (
+	select vend_id
+	from products
+	where prod_id='DTNTR'
+);
+select p1.prod_id, p1.prod_name
+from products p1, products p2
+where p1.vend_id = p2.vend_id
+and p2.prod_id='DTNTR';
+## 自然联结, 应该至少有一个列出现在不止一个表中, 可能会有相同的列多次出现, 自然联结排除多次出现, 使得
+## 每个列只出现一次
+## 你只能选择那些唯一的列. 对表使用通配符(select *), 对其他表的列使用明确的子句
+select c.*, o.order_num, o.order_date, oi.prod_id, oi.quantity, oi.item_price
+from customers c, orders o, orderitems oi
+where c.cust_id = o.cust_id
+and oi.order_num = o.order_num
+and prod_id = 'FB';
+## 外部联结: 联结包括了那些在相关表中没有包含的行
+## 这是一个简单的内联
+select customers.cust_id, orders.order_num
+from customers inner join orders
+on customers.cust_id = orders.cust_id;
+## 外联, left指定了outer join左边为包括了所有行的表
+select customers.cust_id, orders.order_num
+from customers left outer join orders
+on customers.cust_id = orders.cust_id;
+select customers.cust_id, orders.order_num
+from customers right outer join orders
+on customers.cust_id = orders.cust_id;
+## 使用带聚集函数的联结
+## 内联
+select customers.cust_name, customers.cust_id,
+count(orders.order_num) num_ord
+from customers inner join orders
+on customers.cust_id = orders.cust_id
+group by customers.cust_id;
+## 外联
+select customers.cust_name, customers.cust_id,
+count(orders.order_num) num_ord
+from customers left outer join orders
+on customers.cust_id = orders.cust_id
+group by customers.cust_id;
+## 使用union
+## 先使用单条语句
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5;
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 再使用union连接两条单独的查询
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 不使用union达到相同的效果
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5 or vend_id in (1001, 1002);
+## 取消或者包含重复的行
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union all
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002);
+## 对组合查询结果排序
+## 只能在最后一条select子句之后添加order by语句
+## 对整个查询结果集进行排序
+select vend_id, prod_id, prod_price
+from products
+where prod_price <= 5
+union 
+select vend_id, prod_id, prod_price 
+from products 
+where vend_id in (1001, 1002)
+order by vend_id;

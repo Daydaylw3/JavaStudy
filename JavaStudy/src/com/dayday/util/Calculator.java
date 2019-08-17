@@ -71,7 +71,7 @@ public class Calculator {
 		// 指针
 		int top = 0;
 		Node tmp = head;
-		Node postfixExp = new Node("", null);
+		Node postfixExp = new Node("head", null);
 		while (tmp != null) {
 			/*
 			 * 1.若c为数值,则入队末尾
@@ -86,8 +86,6 @@ public class Calculator {
 			tmp.next = null;
 			if (!isOpr(tmp)) {
 				postfixExp.addLast(tmp);
-			} else if (isLeftParenthesis(oprStack[top]) || isUpperPriority(oprStack[top], tmp)) {
-				oprStack[oprStack[top] == null ? top : ++top] = tmp;
 			} else if (isRightParenthesis(tmp)) {
 				while (!isLeftParenthesis(oprStack[top])) {
 					postfixExp.addLast(oprStack[top]);
@@ -95,6 +93,8 @@ public class Calculator {
 				}
 				oprStack[top] = null;
 				if (top > 0) top--;
+			} else if (isLeftParenthesis(oprStack[top]) || isUpperPriority(oprStack[top], tmp)) {
+				oprStack[oprStack[top] == null ? top : ++top] = tmp;
 			} else {
 				while (top >= 0 && !isLeftParenthesis(tmp) && isNotUpperPriority(oprStack[top], tmp)) {
 					postfixExp.addLast(oprStack[top]);
@@ -144,17 +144,13 @@ public class Calculator {
 		for (int i = 0; i < tmp.length(); i++) {
 			char c;
 			if (isOpr(c = tmp.charAt(i))) {
-				if (isLeftParenthesis(c)) 
-					newExp.append(c + " ");
-				else if (isRightParenthesis(c)) 
-					newExp.append(" " + c);
-				else 
-					newExp.append(" " + c + " ");
+				newExp.append(" " + c + " ");
 			} else {
 				newExp.append(c);
 			}
 		}
-		return newExp.toString();
+		while (newExp.indexOf("  ") >= 0) newExp.replace(newExp.indexOf("  "), newExp.indexOf("  ") + 2, " ");
+		return newExp.toString().trim();
 	}
 	
 	
@@ -181,7 +177,7 @@ public class Calculator {
 			case "^":
 				return Math.pow(Double.valueOf(num1.value), Double.valueOf(num2.value));
 			default:
-				throw new IllegalArgumentException("正确的操作符");
+				throw new IllegalArgumentException("不正确的操作符");
 		}
 	}
 	
