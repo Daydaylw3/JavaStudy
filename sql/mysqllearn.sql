@@ -123,3 +123,32 @@ select vend_id, prod_id, prod_price
 from products 
 where vend_id in (1001, 1002)
 order by vend_id;
+## 19章 插入数据
+## 举一个例子
+insert into customers
+values (null, 'Pep E. Lapew', 
+	'100 Main Street', 'Los Angeles', 
+	'CA', '90046', 'USA', null, null);
+## 编写insert语句的更安全的方法如下:
+insert into customers (cust_name, cust_address,
+cust_city, cust_state, cust_zip, cust_country, cust_contact, cust_email)
+values ('Pep E. Lapew', '100 Main Street', 'Los Angeles', 
+	'CA', '90046', 'USA', null, null);
+## 插入多个行
+INSERT INTO customers (cust_name, cust_address,
+cust_city, cust_state, cust_zip, cust_country)
+VALUES('Pep E. LaPew', '100 Main Street',
+'Los Angeles', 'CA', '90046', 'USA');
+INSERT INTO customers (cust_name, cust_address,
+cust_city, cust_state, cust_zip, cust_country)
+VALUES('M. Martian', '42 Galaxy Way', 'New York',
+'NY', '11213', 'USA');
+## 或者只要每条insert语句中的列名(和次序)相同, 可以如下组合各个语句
+INSERT INTO customers (cust_name, cust_address,
+cust_city, cust_state, cust_zip, cust_country)
+VALUES('Pep E. LaPew', '100 Main Street',
+'Los Angeles', 'CA', '90046', 'USA'),
+('M. Martian', '42 Galaxy Way', 'New York',
+'NY', '11213', 'USA');
+## 上面此技术可以提高数据库处理的性能, 
+## 因为MySQL用单条INSERT语句处理多个插入比使用多条INSERT语句快。
