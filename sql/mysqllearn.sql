@@ -152,3 +152,15 @@ VALUES('Pep E. LaPew', '100 Main Street',
 'NY', '11213', 'USA');
 ## 上面此技术可以提高数据库处理的性能, 
 ## 因为MySQL用单条INSERT语句处理多个插入比使用多条INSERT语句快。
+## 插入检索出的数据
+insert into customers(cust_id, cust_contact, cust_email, cust_name,
+cust_address, cust_city, cust_state, cust_zip, cust_country)
+select cust_id, cust_contact, cust_email, cust_name, cust_address, 
+cust_city, cust_state, cust_zip, cust_country
+from custnew;
+## INSERT SELECT中SELECT语句可包含WHERE子句以过滤插入的数据
+## 20章 更新和删除数据
+## 不要省略WHERE子句 在使用UPDATE时一定要注意细心。因为 稍不注意，就会更新表中所有行
+## 举一个简单的例子
+update customers set cust_email = 'elmer@fudd.com'
+where cust_id = 10005;
