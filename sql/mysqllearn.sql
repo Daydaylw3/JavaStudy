@@ -164,3 +164,102 @@ from custnew;
 ## 举一个简单的例子
 update customers set cust_email = 'elmer@fudd.com'
 where cust_id = 10005;
+## 更新多个列
+update customers
+set cust_name = 'The Fudds',
+	cust_email = 'elmer@fudd.com'
+where cust_id = 10005;
+## 为了删除某个列的值, 可设置它为null(假设该列可以为null)
+update customers
+set cust_email = null
+where cust_id = 10005;
+## 删除数据
+delete from customers
+where cust_id = 10006;
+## delete不需要列名或者通配符, 它删除的是整行数据而不是列
+## 如果想从表中删除所有行, 不要使用DELETE. 可使用TRUNCATE TABLE语句,
+## 它完成相同的工作, 但速度更快(TRUNCATE实际是删除原来的表并重新创建一个
+## 表, 而不是逐行删除表中的数据
+## 22章 视图
+## 视图是虚拟的表。与包含数据的表不一样，视图只包含使用时动态 检索数据的查询
+select cust_name, cust_contact
+from customers, orders, orderitems
+where customers.cust_id = orders.cust_id
+and orderitems.order_num = orders.order_num
+and prod_id = 'TNT2';
+## 现在，假如可以把整个查询包装成一个名为productcustomers的虚拟表，则可以
+## 如下轻松地检索出相同的数据
+select cust_name, cust_contact
+from productcustomers
+where prod_id = 'TNT2';
+## 视图用CREATE VIEW语句来创建
+## 使用SHOW CREATE VIEW viewname;来查看创建视图的语句
+## 用DROP删除视图，其语法为DROP VIEW viewname;
+## 更新视图时，可以先用DROP再用CREATE，也可以直接用CREATE OR REPLACE VIEW
+## 视图最常用的应用之一就是隐藏复杂的SQL, 这通常都会涉及联结
+create view productcustomers as
+select cust_name, cust_contact, prod_id
+from customers, orders, orderitems
+where customers.cust_id = orders.cust_id
+and orderitems.order_num = orders.order_num;
+## 想要把以下的语句转换为视图来重用
+select Concat(RTrim(vend_name), ' (', RTrim(vend_country), ')')
+as vend_title
+from vendors
+order by vend_name;
+## 
+create view vendorlocations as
+select Concat(RTrim(vend_name), ' (', RTrim(vend_country), ')')
+as vend_title
+from vendors
+order by vend_name;
+## 用视图过滤不想要的数据
+## 可以定义customeremaillist视图, 过滤没有电子邮件地址的客户
+create view customeremaillist as
+select cust_id, cust_name, cust_email
+from customers
+where cust_email is not null;
+## 使用视图与计算字段
+## 原
+select order_num, prod_id, quantity, item_price, quantity*item_price as expanded_price
+from orderitems
+where order_num = 20005;
+## 
+create view orderitemsexpanded as
+select order_num, prod_id, quantity, item_price, quantity*item_price as expanded_price
+from orderitems;
+## 并非所有视图都是可更新的。基本上可以说, 如果MySQL不
+## 能正确地确定被更新的基数据, 则不允许更新(包括插入和删除)
+## 这实际上意味着, 如果视图定义中有以下操作, 则不能进行视图的更新:
+## 分组(使用group by和having)
+## 联结
+## 子查询
+## 并
+## 聚集函数
+## distinct
+## 导出(计算)列
+## 创建存储过程 
+CREATE PROCEDURE productpricing()
+BEGIN
+	SELECT Avg(prod_price) AS priceaverage
+	FROM products;
+END;
+## 如果你使用的是mysql命令行实用程序，应该仔细阅读此说明
+## 默认的MySQL语句分隔符为;
+## mysql命令行实用程序也使用;作为语句分隔符
+## 如果命令行实用程序要解释存储过程自身内的;字符，则它们最
+## 终不会成为存储过程的成分，这会使存储过程中的SQL出现句法
+## 错误. 解决办法是临时更改命令行实用程序的语句分隔符:
+DELIMITER //
+CREATE PROCEDURE productpricing()
+BEGIN
+	SELECT Avg(prod_price) AS priceaverage
+	FROM products;
+END//
+## 除\符号外，任何字符都可以用作语句分隔符
+## 如何使用存储过程?
+CALL productpricing();
+## 存储过程在创建之后，被保存在服务器上以供使用，直至被删除
+drop procedure productpricing;
+## 当过程存在想删除它时(如果过程不存在也 不产生错误)
+drop procedure if exists productpricing;
