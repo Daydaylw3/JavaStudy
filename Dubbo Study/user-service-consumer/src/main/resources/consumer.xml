@@ -20,6 +20,12 @@
 	
 	<dubbo:reference id="customerService" interface="com.dayday.gmall.service.CustomerService" />
 	
+	<dubbo:reference id="sayHello" interface="com.dayday.gmall.service.IDemoService" retries="3" stub="com.dayday.gmall.service.stub.DemoStub" />
+	
+	<!-- 监控中心配置 -->
 	<dubbo:monitor protocol="register" />
+	
+	<!-- 服务消费者缺省值配置, 优先级是最低的 -->
+	<dubbo:consumer check="false" />
 	
 </beans>
