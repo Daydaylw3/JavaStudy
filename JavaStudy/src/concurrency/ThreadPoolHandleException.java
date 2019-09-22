@@ -28,7 +28,7 @@ public class ThreadPoolHandleException {
 		Thread t1 = new Thread(() -> {
 			ExecutorService exec = Executors.newFixedThreadPool(5);
 			for (int i = 0; i < 5; i++)
-				exec.submit(() -> {		// <--- 这里只能用submit()方法, execute()方法异常会抛出当前线程
+				exec.submit(() -> {		// <--- 这里只能用submit()方法, execute()方法异常会被抛出当前线程
 					System.out.println("current thread name: " + Thread.currentThread().getName());
 					throw new NullPointerException();
 				});
@@ -110,10 +110,10 @@ public class ThreadPoolHandleException {
 			exec.shutdown();
 		});
 		
-//		t1.start();
+		t1.start();
 //		t2.start();
 //		t3.start();
 //		t4.start();
-		t5.start();
+//		t5.start();
 	}
 }
