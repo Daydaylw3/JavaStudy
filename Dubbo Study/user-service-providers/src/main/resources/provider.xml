@@ -17,7 +17,11 @@
 	<!-- 暴露服务 -->
 	<dubbo:service interface="com.dayday.gmall.service.CustomerService" ref="customerService"></dubbo:service>
 	
+	<dubbo:service interface="com.dayday.gmall.service.IDemoService" ref="sayHello" />
+	
 	<bean id="customerService" class="com.dayday.gmall.service.impl.CustomerServiceImpl"></bean>
+	
+	<bean id="sayHello" class="com.dayday.gmall.service.impl.DemoService" />
 	
 	<dubbo:monitor protocol="register" />
 	
