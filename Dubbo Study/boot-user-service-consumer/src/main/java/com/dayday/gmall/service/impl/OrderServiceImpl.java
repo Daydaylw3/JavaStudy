@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.dayday.gmall.bean.CustomerAddress;
 import com.dayday.gmall.service.CustomerService;
 import com.dayday.gmall.service.OrderService;
@@ -19,7 +20,8 @@ import com.dayday.gmall.service.OrderService;
 @Service
 public class OrderServiceImpl implements OrderService {
 	
-	@Autowired
+//	@Autowired
+	@Reference
 	CustomerService customerService;
 	
 	@Override
