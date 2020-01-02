@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.icbc.bifs</groupId>
+		<artifactId>com.icbc.ctp.front.appwatch.datacollection.parent</artifactId>
+		<version>1.0</version>
+		<relativePath>../../com.icbc.ctp.front.appwatch.datacollection.parent/pom.xml</relativePath>
+	</parent>
+	<artifactId>com.icbc.bifs.datalayer</artifactId>
+	<version>${bifs.version}</version>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.icbc.bifs</groupId>
+			<artifactId>com.icbc.bifs.api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.icbc.bifs</groupId>
+			<artifactId>com.icbc.ctp.appwatch.api</artifactId>
+		</dependency>
+	</dependencies>
+</project>
